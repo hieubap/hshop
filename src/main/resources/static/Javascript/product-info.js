@@ -77,7 +77,6 @@ fetProducts();
 
 function keepData(){
     localStorage.setItem("list_select_keep",JSON.stringify(listSelect));
-    // location.replace("http://127.0.0.1:5500/giohang.html");
 }
 
 // handle and render products
@@ -94,7 +93,7 @@ function renderPageProducts(pageProducts) {
 
         productEls += 
         `<div class="col l-2-4 m-4 c-6">
-            <a href="giohang.html" id="${pageProduct.id}" class="home-product-item">
+            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
                 <img src=" ${pageProduct.img}" class="home-product-item__img">
                 <div class="home-product-item__name"> ${pageProduct.name} </div>
                 <div class="home-product-item__price">
@@ -237,7 +236,7 @@ function renderPageProducts(pageProducts) {
 
 function addButtonAction(){
     document.getElementById('xem_gio_hang').addEventListener('click',function (e){
-        location.replace('http://127.0.0.1:5500/giohang.html');
+        location.replace('http://93.188.162.82:8081/giohang.html');
     })
 }
 

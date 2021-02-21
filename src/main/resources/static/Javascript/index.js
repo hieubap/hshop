@@ -11,7 +11,7 @@ function convertMoney(money){
       return price.substring(0,len-10)+"."+price.substring(0,len-7)+"."+price.substring(len-7,len-3)+"."+price.substring(len-4);
   }
 
-url_product = 'http://localhost:8081/product/search';
+url_product = 'http://93.188.162.82:8081/product/search';
 // var pageProducts;
 function fetProducts(){
     fetch(url_product,{
@@ -295,7 +295,7 @@ hoverCategoryItems();
 
 function addButtonAction(){
     document.getElementById('xem_gio_hang').addEventListener('click',function (e){
-        location.replace('http://127.0.0.1:5500/giohang.html');
+        location.replace('http://93.188.162.82:8081/giohang.html');
     })
 
 }
