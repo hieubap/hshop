@@ -1,0 +1,8 @@
+.bill {
+    padding-left: 0;
+    list-style: none;
+    max-height: 60vh;
+    overflow-y: auto;
+    margin: 0; 
+    border: 1px solid #ddd;
+}

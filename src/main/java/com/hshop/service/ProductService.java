@@ -1,12 +1,14 @@
 package com.hshop.service;
 
 
-import com.hshop.dto.FoodDTO;
+import com.hshop.dto.ProductDTO;
+import com.hshop.exception.BaseException;
 import org.springframework.http.ResponseEntity;
 
 public interface ProductService {
-  ResponseEntity<?> search(FoodDTO dto);
-  ResponseEntity<?> create(FoodDTO dto);
-  ResponseEntity<?> update(Long id,FoodDTO dto) throws Exception;
+  ResponseEntity<?> search(ProductDTO dto);
+  ResponseEntity<?> create(ProductDTO dto) throws BaseException;
+  ResponseEntity<?> update(Long id, ProductDTO dto) throws Exception;
   ResponseEntity<?> delete(Long id) throws Exception;
+
 }

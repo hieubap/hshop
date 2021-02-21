@@ -1,6 +1,7 @@
 package com.hshop.controller;
 
-import com.hshop.dto.FoodDTO;
+import com.hshop.dto.ProductDTO;
+import com.hshop.exception.BaseException;
 import com.hshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -23,17 +24,17 @@ public class ProductController {
   private ProductService foodService;
 
   @GetMapping(value = "/search")
-  public ResponseEntity<?> search(FoodDTO foodDTO) {
+  public ResponseEntity<?> search(ProductDTO foodDTO) {
     return foodService.search(foodDTO);
   }
 
   @PostMapping(value = "/create")
-  public ResponseEntity<?> create(@RequestBody FoodDTO foodDTO){
+  public ResponseEntity<?> create(@RequestBody ProductDTO foodDTO) throws BaseException {
     return foodService.create(foodDTO);
   }
 
   @PutMapping(value = "/update")
-  public ResponseEntity<?> update(@RequestBody FoodDTO dto,@Param(value = "id") Long id)
+  public ResponseEntity<?> update(@RequestBody ProductDTO dto,@Param(value = "id") Long id)
       throws Exception {
     return foodService.update(id, dto);
   }

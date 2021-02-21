@@ -1,6 +1,10 @@
 .container {
-  margin-top: 50px;
+  border: 1px solid #ddd;
+  background-color: white;
+  height: auto;
+  margin: 30px 10% 0 10%;
 }
+
 body {
     margin: 0px;
     font-family: Arial;
@@ -1308,14 +1312,14 @@ body {
   
   .home-product-item__price-old {
     margin-left: 10px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: #666;
     text-decoration: line-through;
   }
   
   .home-product-item__price-current {
     margin-left: 10px;
-    font-size: 1.1rem;
+    font-size: 1.0rem;
     color: var(--var-color);
   }
   

@@ -1,4 +1,17 @@
-url_product = 'http://93.188.162.82:8081/product/search';
+function convertMoney(money){
+    var price = money+'đ';
+    var len = price.length;
+    if (len < 5)
+    return price;
+    if (len < 8)
+    return price.substring(0,len-4)+"."+price.substring(len-4);
+    if (len < 11)
+      return price.substring(0,len-7)+"."+price.substring(len-7,len-4)+"."+price.substring(len-4);
+    if (len < 14)
+      return price.substring(0,len-10)+"."+price.substring(0,len-7)+"."+price.substring(len-7,len-3)+"."+price.substring(len-4);
+  }
+
+url_product = 'http://localhost:8081/product/search';
 // var pageProducts;
 function fetProducts(){
     fetch(url_product,{
@@ -29,8 +42,8 @@ function renderPageProducts(pageProducts) {
                 <img src=" ${pageProduct.img}" class="home-product-item__img">
                 <div class="home-product-item__name"> ${pageProduct.name} </div>
                 <div class="home-product-item__price">
-                    <span class="home-product-item__price-old"> ${pageProduct.oldPrice} </span>
-                    <span class="home-product-item__price-current"> ${pageProduct.curPrice} </span>
+                    <span class="home-product-item__price-old"> ${convertMoney(pageProduct.oldPrice)} </span>
+                    <span class="home-product-item__price-current"> ${convertMoney(pageProduct.newPrice)} </span>
                 </div>
                 <div class="home-product-item__action">
                     <span class="home-product-item__like home-product-item__like--liked">
@@ -44,19 +57,19 @@ function renderPageProducts(pageProducts) {
                         <i class="home-product-item__star--gold fas fa-star"></i>
                         <i class="fas fa-star"></i>
                     </div>
-                    <span class="home-product-item__sold"> ${pageProduct.sold + ' đã bán'} </span>
+                    <span class="home-product-item__sold"> ${pageProduct.numberSell + ' đã bán'} </span>
                 </div>
                 <div class="home-product-item__origin">
-                    <span class="home-product-item__brand"> ${pageProduct.brand} </span>
-                    <span class="home-product-item__origin-name"> ${pageProduct.origin} </span>
+                    <span class="home-product-item__brand"> NEW </span>
+                    <span class="home-product-item__origin-name"> ${pageProduct.manufactureCountry} </span>
                 </div>
                 <div class="product-favourite">
                     <i class="fas fa-check"></i>
-                    <span> ${pageProduct.react} </span>
+                    <span> Yêu thích </span>
                 </div>
                 <div class="product-sale-off">
                     <span class="product-sale-off__percent"> ${pageProduct.per}% </span>
-                    <span class="product-sale-off__label"> ${pageProduct.label} </span>
+                    <span class="product-sale-off__label"> GIẢM </span>
                 </div>
                 
             </a>

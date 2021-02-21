@@ -1,26 +1,17 @@
-package com.hshop.dao.model;
+package com.hshop.dto;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "product")
-public class ProductEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+@ToString
+public class ProductDTO {
   private Long id;
 
   private String title;
@@ -40,18 +31,8 @@ public class ProductEntity {
   private String detail;
   private String img;
   private String distributor;
+  private Integer per;
 
   private LocalDateTime createdDate;
   private LocalDateTime updatedDate;
-
-  @PrePersist
-  void prePersist() {
-    createdDate = LocalDateTime.now();
-    updatedDate = createdDate;
-  }
-
-  @PreUpdate
-  void preUpdate() {
-    updatedDate = LocalDateTime.now();
-  }
 }

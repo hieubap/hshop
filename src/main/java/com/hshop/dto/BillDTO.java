@@ -24,7 +24,7 @@ public class BillDTO {
   @Setter
   @NoArgsConstructor
   public static class Bill_Food{
-    public FoodDTO food;
+    public ProductDTO food;
     public Integer number;
     public Long price;
   }

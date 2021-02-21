@@ -9,7 +9,7 @@ import com.hshop.dao.repository.ProductRepository;
 import com.hshop.dao.repository.UserRepository;
 import com.hshop.dto.BillDTO;
 import com.hshop.dto.BillDTO.Bill_Food;
-import com.hshop.dto.FoodDTO;
+import com.hshop.dto.ProductDTO;
 import com.hshop.dto.OrderDTO;
 import com.hshop.dto.ResponseDTO;
 import com.hshop.enums.BillStatus;
@@ -174,14 +174,14 @@ public class BillServiceImpl implements BillService{
   public static Bill_Food convertBillFoodEntityToDTO(BillFoodEntity entity){
     Bill_Food billFood = new Bill_Food();
 
-    FoodDTO foodDTO = new FoodDTO();
+    ProductDTO foodDTO = new ProductDTO();
     foodDTO.setId(entity.getFood().getId());
     foodDTO.setName(entity.getFood().getName());
-    foodDTO.setPrice(entity.getFood().getCurPrice());
+    foodDTO.setNewPrice(entity.getFood().getNewPrice());
     billFood.setFood(foodDTO);
 
     billFood.setNumber(entity.getNumber());
-    billFood.setPrice(entity.getNumber()*entity.getFood().getCurPrice());
+    billFood.setPrice(entity.getNumber()*entity.getFood().getNewPrice());
 
     return billFood;
   }
