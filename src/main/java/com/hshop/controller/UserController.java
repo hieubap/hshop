@@ -1,0 +1,43 @@
+package com.hshop.controller;
+
+import com.hshop.dto.UserDTO;
+import com.hshop.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@CrossOrigin(origins = "http://localhost:63342")
+@RestController
+@RequestMapping(value = "/user")
+public class UserController {
+  @Autowired
+  public UserService userService;
+
+  @GetMapping(value = "/search")
+  public ResponseEntity<?> search(UserDTO userDTO){
+    return userService.search(userDTO);
+  }
+
+  @PostMapping(value = "/create")
+  public ResponseEntity<?> create(@RequestBody UserDTO dto){
+    return userService.register(dto);
+  }
+
+  @PutMapping(value = "/update")
+  public ResponseEntity<?> update(@Param(value = "id") Long id,UserDTO userDTO) throws Exception {
+    return userService.update(id,userDTO);
+  }
+
+  @DeleteMapping(value = "/delete")
+  public ResponseEntity<?> delete(@Param(value = "id") Long id) throws Exception{
+    return userService.delete(id);
+  }
+}
