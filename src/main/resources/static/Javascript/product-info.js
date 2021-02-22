@@ -1,4 +1,4 @@
-import {convertMoney} from './common/common.js';
+import {convertMoney,convertDaBan} from './common/common.js';
 
 const url_product = 'http://93.188.162.82:8081/product/search';
 
@@ -7,10 +7,11 @@ var listSelect= localStorage.getItem("list_select_keep")==null?[]:JSON.parse(loc
 
 var pageProducts;
 
-function showSelect(){
+function showSelect(pageProducts){
     var html_ = '';
     for(var j = 0;j<listSelect.length;j++){
         var pageProduct = pageProducts[j];
+        // console.log(pageProduct);
         html_ += `
         <li title="Mũ chụp ngược Minecraft Dungeons" class="header__cart-item">
         <div class="header__cart-img-wrapper">
@@ -56,12 +57,12 @@ function fetProducts(){
                 pageProducts = JSON.parse(JSON.stringify(text)).data;
                 console.log(pageProducts);
                 renderPageProducts(pageProducts);
-                showSelect();
+                showSelect(pageProducts);
             })
         }
     })
 
-    var url_get_info = url_product+'?name=samsung';
+    var url_get_info = url_product+window.location.search;
     console.log(url_get_info);
     fetch(url_get_info,{
         method: 'get'
@@ -69,8 +70,8 @@ function fetProducts(){
         if (response.status === 200)
         {
             response.json().then(function (text){
-                var data_info = JSON.parse(JSON.stringify(text)).data;
-                console.log(data_info);
+                var data_info = JSON.parse(JSON.stringify(text)).data[0];
+                showInfor(data_info);
             })
         }
     })
@@ -96,7 +97,7 @@ function renderPageProducts(pageProducts) {
 
         productEls += 
         `<div class="col l-2-4 m-4 c-6">
-            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
+            <a href="product-info.html?id=${pageProduct.id}" id="${pageProduct.id}" class="home-product-item">
                 <img src=" ${pageProduct.img}" class="home-product-item__img">
                 <div class="home-product-item__name"> ${pageProduct.name} </div>
                 <div class="home-product-item__price">
@@ -145,7 +146,7 @@ function renderPageProducts(pageProducts) {
 
         productEls2 += 
         `<div class="col l-2-4 m-4 c-6">
-            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
+            <a href="product-info.html?id=${pageProduct.id}" id="${pageProduct.id}" class="home-product-item">
                 <img src=" ${pageProduct.img}" class="home-product-item__img">
                 <div class="home-product-item__name"> ${pageProduct.name} </div>
                 <div class="home-product-item__price">
@@ -194,7 +195,7 @@ function renderPageProducts(pageProducts) {
 
         productEls3 += 
         `<div class="col l-2-4 m-4 c-6">
-            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
+            <a href="product-info.html?id=${pageProduct.id}" id="${pageProduct.id}" class="home-product-item">
                 <img src=" ${pageProduct.img}" class="home-product-item__img">
                 <div class="home-product-item__name"> ${pageProduct.name} </div>
                 <div class="home-product-item__price">
@@ -247,47 +248,51 @@ addButtonAction();
 
 function clickthemhang(id){
     var str = '{"'+id+'":1}';
-    listSelect.push(id);
+    listSelect.push(str);
     showSelect();
     keepData();
 }
 
-function infor(){
+function showInfor(body){
     var html_ = `<div class="item_information content" id="item_info_2">
     <div>
-        <div class="head_str">Kính Cường Lực Iphone 15D Full Màn Remax - 5/5s/6/6plus/6s/6s plus/6/7/7plus/8/8plus/x/xs/xs max/11/11 pro/11 promax</div>
+        <div class="head_str">${body.title}</div>
+        <div class="head_str">${body.name}</div>
         <div>
             <div style="margin-top:17px;float: left;">
-                <span style="white-space:pre-wrap;font-size: 18px;"> 4.9 </span>
+                <span style="padding-left:20px;white-space:pre-wrap;font-size: 18px;"> ${body.star} </span>
             </div>
             <div class="home-product-item__rating" style="float: left;margin-top: 13px;">
-                <i class="home-product-item__star--gold fas fa-star icon_start" ></i>
-                <i class="home-product-item__star--gold fas fa-star icon_start" ></i>
-                <i class="home-product-item__star--gold fas fa-star icon_start" ></i>
-                <i class="home-product-item__star--gold fas fa-star icon_start" ></i>
-                <i class="home-product-item__star--gold fas fa-star icon_start" ></i>
+                <i class="home-product-item__star--gold fas fa-star icon_star" ></i>
+                <i class="home-product-item__star--gold fas fa-star icon_star" ></i>
+                <i class="home-product-item__star--gold fas fa-star icon_star" ></i>
+                <i class="home-product-item__star--gold fas fa-star icon_star" ></i>
+                <i class="home-product-item__star--gold fas fa-star icon_star" ></i>
                 </div>
             <div style="margin-top:17px;float: left;">
-                <span style="white-space:pre-wrap;font-size: 18px;"> | 904 đánh giá | 6.6k đã bán</span>
+                <span style="white-space:pre-wrap;font-size: 18px;"> | ${body.numberComment} đánh giá | ${convertDaBan(body.numberSell)} đã bán</span>
             </div>
             <div style="clear:both;"></div>
         </div>
     </div>
-    <div class="price">
-        99.000đ
+    <div id="id_3">
+    <div class="price_old">${convertMoney(body.oldPrice)}</div>    
+    <div class="price_new">${convertMoney(body.newPrice)}</div>    
     </div>
     <div class="type_">
         phân loại
     </div>
     <div class="type_">
-        số lượng
+        số lượng: ${body.number}
     </div>
     <div class="type_">
         màu sắc
     </div>
     <div class="type_">
-        <button class="btn_order btn_green" onclick="clickthemhang(1)">thêm vào giỏ hàng</button>
+        <button class="btn_order btn_green" onclick="clickthemhang(${body.id})">thêm vào giỏ hàng</button>
         <button class="btn_order btn_green">mua ngay</button>
     </div>
 </div>`;
+document.getElementById('id_1').innerHTML = html_;
+document.getElementById('id_2').innerHTML = `<img src="${body.img}" style="width: 100%;"></img>`;
 }

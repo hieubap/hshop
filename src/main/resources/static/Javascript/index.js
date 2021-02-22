@@ -27,7 +27,7 @@ function renderPageProducts(pageProducts) {
     for (let pageProduct of pageProducts) {
         productEls += 
         `<div class="col l-2-4 m-4 c-6">
-            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
+            <a href="product-info.html?id=${pageProduct.id}" id="${pageProduct.id}" class="home-product-item">
                 <img src=" ${pageProduct.img}" class="home-product-item__img">
                 <div class="home-product-item__name"> ${pageProduct.name} </div>
                 <div class="home-product-item__price">
