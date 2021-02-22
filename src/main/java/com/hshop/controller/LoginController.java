@@ -20,4 +20,9 @@ public class LoginController {
   public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) throws Exception {
     return userService.login(loginDTO);
   }
+
+  @RequestMapping(value = "/register",method = RequestMethod.POST)
+  public ResponseEntity<?> register(LoginDTO loginDTO){
+    return 
+  }
 }

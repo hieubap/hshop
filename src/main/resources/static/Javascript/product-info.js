@@ -1,4 +1,6 @@
-url_product = 'http://93.188.162.82:8081/product/search';
+import {convertMoney} from './common/common.js';
+
+const url_product = 'http://93.188.162.82:8081/product/search';
 
 // var listSelect = [];
 var listSelect= localStorage.getItem("list_select_keep")==null?[]:JSON.parse(localStorage.getItem("list_select_keep"));
@@ -7,8 +9,8 @@ var pageProducts;
 
 function showSelect(){
     var html_ = '';
-    for(i = 0;i<listSelect.length;i++){
-        var pageProduct = pageProducts[i];
+    for(var j = 0;j<listSelect.length;j++){
+        var pageProduct = pageProducts[j];
         html_ += `
         <li title="Mũ chụp ngược Minecraft Dungeons" class="header__cart-item">
         <div class="header__cart-img-wrapper">
@@ -27,7 +29,7 @@ function showSelect(){
 <span class="header__cart-item-description">
 Phân loại: Hàng Quốc tế
 </span>
-<span class="header__cart-item-remove" onclick="removeSelect(${i})">Xóa</span>
+<span class="header__cart-item-remove" onclick="removeSelect(${pageProduct.id})">Xóa</span>
 </div>
 </div></li>`;
     }
@@ -43,19 +45,6 @@ function removeSelect(id){
     showSelect();
 }
 
-function convertMoney(money){
-    var price = money+'đ';
-    var len = price.length;
-    if (len < 5)
-    return price;
-    if (len < 8)
-    return price.substring(0,len-4)+"."+price.substring(len-4);
-    if (len < 11)
-      return price.substring(0,len-7)+"."+price.substring(len-7,len-4)+"."+price.substring(len-4);
-    if (len < 14)
-      return price.substring(0,len-10)+"."+price.substring(0,len-7)+"."+price.substring(len-7,len-3)+"."+price.substring(len-4);
-  }
-
 // var pageProducts;
 function fetProducts(){
     fetch(url_product,{
@@ -68,6 +57,20 @@ function fetProducts(){
                 console.log(pageProducts);
                 renderPageProducts(pageProducts);
                 showSelect();
+            })
+        }
+    })
+
+    var url_get_info = url_product+'?name=samsung';
+    console.log(url_get_info);
+    fetch(url_get_info,{
+        method: 'get'
+    }).then(function (response){
+        if (response.status === 200)
+        {
+            response.json().then(function (text){
+                var data_info = JSON.parse(JSON.stringify(text)).data;
+                console.log(data_info);
             })
         }
     })
@@ -86,10 +89,10 @@ function renderPageProducts(pageProducts) {
     let suggestion3 = document.querySelector('.suggestion3 .row'); // get element of product container
     
     let productEls = ''; // save page products 
-
+    var i;
     for (i = 0;i< pageProducts.length ; i++) {
         if(i > 4 ) break;
-        pageProduct = pageProducts[i];
+        var pageProduct = pageProducts[i];
 
         productEls += 
         `<div class="col l-2-4 m-4 c-6">
@@ -243,7 +246,48 @@ function addButtonAction(){
 addButtonAction();
 
 function clickthemhang(id){
+    var str = '{"'+id+'":1}';
     listSelect.push(id);
     showSelect();
     keepData();
+}
+
+function infor(){
+    var html_ = `<div class="item_information content" id="item_info_2">
+    <div>
+        <div class="head_str">Kính Cường Lực Iphone 15D Full Màn Remax - 5/5s/6/6plus/6s/6s plus/6/7/7plus/8/8plus/x/xs/xs max/11/11 pro/11 promax</div>
+        <div>
+            <div style="margin-top:17px;float: left;">
+                <span style="white-space:pre-wrap;font-size: 18px;"> 4.9 </span>
+            </div>
+            <div class="home-product-item__rating" style="float: left;margin-top: 13px;">
+                <i class="home-product-item__star--gold fas fa-star icon_start" ></i>
+                <i class="home-product-item__star--gold fas fa-star icon_start" ></i>
+                <i class="home-product-item__star--gold fas fa-star icon_start" ></i>
+                <i class="home-product-item__star--gold fas fa-star icon_start" ></i>
+                <i class="home-product-item__star--gold fas fa-star icon_start" ></i>
+                </div>
+            <div style="margin-top:17px;float: left;">
+                <span style="white-space:pre-wrap;font-size: 18px;"> | 904 đánh giá | 6.6k đã bán</span>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    <div class="price">
+        99.000đ
+    </div>
+    <div class="type_">
+        phân loại
+    </div>
+    <div class="type_">
+        số lượng
+    </div>
+    <div class="type_">
+        màu sắc
+    </div>
+    <div class="type_">
+        <button class="btn_order btn_green" onclick="clickthemhang(1)">thêm vào giỏ hàng</button>
+        <button class="btn_order btn_green">mua ngay</button>
+    </div>
+</div>`;
 }
