@@ -23,6 +23,6 @@ public class LoginController {
 
   @RequestMapping(value = "/register",method = RequestMethod.POST)
   public ResponseEntity<?> register(LoginDTO loginDTO){
-    return 
+    return null;
   }
 }
