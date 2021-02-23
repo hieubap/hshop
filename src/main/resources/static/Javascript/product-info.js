@@ -4,7 +4,7 @@ var listSelect= localStorage.getItem("list_select_keep")==null?[]:JSON.parse(loc
 var pageProducts;
 
 const url_product = 'http://93.188.162.82:8081/product/search';
-const url_giohanghtml = 'http://93.188.162.82:5500/src/main/resources/static/giohang.html';
+const url_giohanghtml = 'http://93.188.162.82:8081/giohang.html';
 
 // var pageProducts;
 function callApi(){
