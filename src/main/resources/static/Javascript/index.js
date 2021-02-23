@@ -1,7 +1,9 @@
-import {convertMoney} from './common/common.js';
-
 const url_product = 'http://93.188.162.82:8081/product/search';
-// var pageProducts;
+
+var listSelect= localStorage.getItem("list_select_keep")==null?[]:JSON.parse(localStorage.getItem("list_select_keep"));
+
+var pageProducts;
+
 function fetProducts(){
     fetch(url_product,{
         method: 'get'
@@ -9,15 +11,76 @@ function fetProducts(){
         if (response.status === 200)
         {
             response.json().then(function (text){
-                const pageProducts = JSON.parse(JSON.stringify(text)).data;
+                pageProducts = JSON.parse(JSON.stringify(text)).data;
                 console.log(pageProducts);
                 renderPageProducts(pageProducts);
+                showSelect();
             })
         }
     })
 }
 
 fetProducts();
+
+function showSelect(){
+    var html_ = '';
+    for(i=0;i<listSelect.length;i++)
+    for(j = 0;j<pageProducts.length;j++){
+        var pageProduct = pageProducts[j];
+        if(listSelect[i].id == pageProduct.id) {
+        html_ += `
+        <li title="${pageProduct.title}" class="header__cart-item">
+        <div class="header__cart-img-wrapper">
+        <img src="${pageProduct.img}" class="header__cart-img">
+        </div>
+        <div class="header__cart-item-info">
+        <div class="header__cart-item-head">
+        <div class="header__cart-item-name">${pageProduct.name}</div>
+        <div class="header__cart-item-price-wrap">
+        <span class="header__cart-item-price">${convertMoney(pageProduct.newPrice)}</span>
+        <span class="header__cart-item-multiply">x</span>
+        <span class="header__cart-item-qnt">${listSelect[i].s}</span>
+        </div>												
+        </div>
+        <div class="header__cart-item-body">
+        <span class="header__cart-item-description">
+        Phân loại: Hàng Quốc tế
+        </span>
+        <span class="header__cart-item-remove" onclick="removeSelect(${pageProduct.id})">Xóa</span>
+        </div>
+        </div></li>`;
+        }
+    }
+    document.getElementById('list_select').innerHTML = html_;
+    document.getElementById('number_select').innerHTML = listSelect.length;
+}
+
+function removeSelect(id){
+    for(i=0;i<listSelect.length;i++)
+    {
+        if(listSelect[i].id == id){
+            var a1 = listSelect.slice(0,i);
+            var a2 = listSelect.slice(i+1,listSelect.length);
+            listSelect = a1.concat(a2);
+            showSelect();
+            keepData();
+        }
+    }
+}
+
+function convertMoney(money){
+    var price = money+' đ';
+    var len = price.length;
+    if (len < 5)
+    return price;
+    if (len < 8)
+    return price.substring(0,len-5)+"."+price.substring(len-5);
+    if (len < 11)
+      return price.substring(0,len-8)+"."+price.substring(len-8,len-5)+"."+price.substring(len-5);
+    if (len < 14)
+      return price.substring(0,len-11)+"."+price.substring(0,len-8)+"."+price.substring(len-8,len-4)+"."+price.substring(len-4);
+  }
+
 
 // handle and render products
 function renderPageProducts(pageProducts) {
