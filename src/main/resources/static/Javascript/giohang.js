@@ -6,38 +6,62 @@ var pageProducts;
 
 function keepData(){
     localStorage.setItem("list_select_keep",JSON.stringify(listSelect));
-    // location.replace("http://127.0.0.1:5500/giohang.html");
 }
 
 function showSelect(){
     var html_ = '';
-    for(i = 0;i<listSelect.length;i++){
-        var pageProduct = pageProducts[i];
+    var sum = 0;
+    for(i=0;i<listSelect.length;i++)
+    for(j = 0;j<pageProducts.length;j++){
+        var pageProduct = pageProducts[j];
+        if(listSelect[i].id == pageProduct.id) {
         html_ += `
-        <li title="Mũ chụp ngược Minecraft Dungeons" class="header__cart-item">
+        <li title="title" class="header__cart-item1">
         <div class="header__cart-img-wrapper">
         <img src="${pageProduct.img}" class="header__cart-img">
         </div>
-<div class="header__cart-item-info">
-<div class="header__cart-item-head">
-<div class="header__cart-item-name">${pageProduct.name}</div>
-<div class="header__cart-item-price-wrap">
-<span class="header__cart-item-price">${convertMoney(pageProduct.newPrice)}</span>
-<span class="header__cart-item-multiply">x</span>
-<span class="header__cart-item-qnt">1</span>
-</div>												
-</div>
-<div class="header__cart-item-body">
-<span class="header__cart-item-description">
-Phân loại: Hàng Quốc tế
-</span>
-<span class="header__cart-item-remove" onclick="removeSelect(${i})">Xóa</span>
-</div>
-</div></li>`;
+        <div class="header__cart-item-info">
+        <div class="list_select_body">
+            <div class="list_info">
+                <span class="list_select_ten">
+                    ${pageProduct.name}
+                    </span>
+                <span class="list_select_phanloai">
+                    Phân loại: Hàng Quốc tế
+                    </span>
+            </div>
+        <span class="list_gia">${convertMoney(pageProduct.newPrice)} </span>
+        <span class="list_select_sub" onclick="addSoLuong(${pageProduct.id},-1)">_</span>
+        <span class="list_soluong">${listSelect[i].s}</span>
+        <span class="list_select_add" onclick="addSoLuong(${pageProduct.id},1)">+</span>
+        <span class="list_tien">${convertMoney(pageProduct.newPrice*listSelect[i].s)}</span>
+        <span class="list_select_remove" onclick="removeSelect(1)">Xóa</span>
+        </div>
+        </div>
+		</li>`;
+        sum += pageProduct.newPrice*listSelect[i].s;
+        }
     }
     document.getElementById('bill_id').innerHTML = html_;
+
+    html_ = `<span style="color: tomato;font-size: 20px;"
+     id="tongtien2">${convertMoney(sum)}</span>`;
+    document.getElementById('tongtien2').innerHTML = html_;
 }
 
+function addSoLuong(id,value){
+    for(i=0;i<listSelect.length;i++){
+        if(listSelect[i].id == id){
+            if(listSelect[i].s == 0 & value == -1)
+            return;
+            listSelect[i].s+=value;
+            showSelect();
+            keepData();
+            return;
+        }
+    }
+    showSelect();
+}
 
 function removeSelect(id){
     var a1 = listSelect.slice(0,id);
@@ -48,16 +72,16 @@ function removeSelect(id){
 }
 
 function convertMoney(money){
-    var price = money+'đ';
+    var price = money+' đ';
     var len = price.length;
     if (len < 5)
     return price;
     if (len < 8)
-    return price.substring(0,len-4)+"."+price.substring(len-4);
+    return price.substring(0,len-5)+"."+price.substring(len-5);
     if (len < 11)
-      return price.substring(0,len-7)+"."+price.substring(len-7,len-4)+"."+price.substring(len-4);
+      return price.substring(0,len-8)+"."+price.substring(len-8,len-5)+"."+price.substring(len-5);
     if (len < 14)
-      return price.substring(0,len-10)+"."+price.substring(0,len-7)+"."+price.substring(len-7,len-3)+"."+price.substring(len-4);
+      return price.substring(0,len-11)+"."+price.substring(0,len-8)+"."+price.substring(len-8,len-4)+"."+price.substring(len-4);
   }
 
 // var pageProducts;
