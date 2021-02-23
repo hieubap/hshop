@@ -81,7 +81,7 @@ function convertMoney(money){
     if (len < 11)
       return price.substring(0,len-8)+"."+price.substring(len-8,len-5)+"."+price.substring(len-5);
     if (len < 14)
-      return price.substring(0,len-11)+"."+price.substring(0,len-8)+"."+price.substring(len-8,len-4)+"."+price.substring(len-4);
+      return price.substring(0,len-11)+"."+price.substring(len-11,len-8)+"."+price.substring(len-8,len-5)+"."+price.substring(len-5);
   }
 
 // var pageProducts;
