@@ -1,11 +1,12 @@
-const url_product = 'http://93.188.162.82:8081/product/search';
+const url_product = 'http://93.188.162.82:8081/product/search?name=';
 
 var listSelect= localStorage.getItem("list_select_keep")==null?[]:JSON.parse(localStorage.getItem("list_select_keep"));
 
 var pageProducts;
 
 function fetProducts(){
-    fetch(url_product,{
+    var name = document.getElementById('search_input').value;
+    fetch(url_product+name,{
         method: 'get'
     }).then(function (response){
         if (response.status === 200)
@@ -349,7 +350,22 @@ function addButtonAction(){
     document.getElementById('xem_gio_hang').addEventListener('click',function (e){
         location.replace('http://93.188.162.82:8081/giohang.html');
     })
-
+    document.getElementById('search_input').addEventListener('keypress',function (e){
+        if (event.keyCode === 13) {
+            fetProducts();
+            this.blur();
+            console.log('btn click');
+            document.getElementById('qc').innerHTML = '';
+      }
+    })
+    document.getElementById('btn_search').addEventListener('click',function (e){
+            fetProducts();
+            this.blur();
+            console.log('btn click');
+            document.getElementById('qc').innerHTML = '';
+    })
+    
+    
 }
 
 addButtonAction();

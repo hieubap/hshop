@@ -131,14 +131,14 @@ function renderPageProducts(pageProducts) {
     let suggestion3 = document.querySelector('.suggestion3 .row'); // get element of product container
     
     let productEls = ''; // save page products 
-    var i;
+
     for (i = 0;i< pageProducts.length ; i++) {
         if(i > 4 ) break;
-        var pageProduct = pageProducts[i];
+        pageProduct = pageProducts[i];
 
         productEls += 
         `<div class="col l-2-4 m-4 c-6">
-            <a href="product-info.html?id=${pageProduct.id}" id="${pageProduct.id}" class="home-product-item">
+            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
                 <img src=" ${pageProduct.img}" class="home-product-item__img">
                 <div class="home-product-item__name"> ${pageProduct.name} </div>
                 <div class="home-product-item__price">
@@ -187,7 +187,7 @@ function renderPageProducts(pageProducts) {
 
         productEls2 += 
         `<div class="col l-2-4 m-4 c-6">
-            <a href="product-info.html?id=${pageProduct.id}" id="${pageProduct.id}" class="home-product-item">
+            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
                 <img src=" ${pageProduct.img}" class="home-product-item__img">
                 <div class="home-product-item__name"> ${pageProduct.name} </div>
                 <div class="home-product-item__price">
@@ -236,7 +236,7 @@ function renderPageProducts(pageProducts) {
 
         productEls3 += 
         `<div class="col l-2-4 m-4 c-6">
-            <a href="product-info.html?id=${pageProduct.id}" id="${pageProduct.id}" class="home-product-item">
+            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
                 <img src=" ${pageProduct.img}" class="home-product-item__img">
                 <div class="home-product-item__name"> ${pageProduct.name} </div>
                 <div class="home-product-item__price">
