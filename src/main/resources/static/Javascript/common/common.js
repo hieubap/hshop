@@ -1,5 +1,5 @@
 const domainApi = 'http://93.188.162.82:8081';
-const domain = 'http://127.0.0.1:5500'
+const domain = 'http://93.188.162.82:8081'
 const url_giohang = domain+'/giohang.html';
 
 const url_product = domainApi+'/product/search?';
