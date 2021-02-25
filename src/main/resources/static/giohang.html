@@ -14,6 +14,17 @@
     
     <link rel="stylesheet" type="text/css" href="CSS/giohang.css" />
 
+	<script src="./Javascript/common/common.js"></script>
+	<script src="./Javascript/giohang.js"></script>
+	<script src="./Javascript/general-bugs.js"></script>
+
+	<script src="./Javascript/handle-form.js"></script>
+	<script src="./Javascript/validator.js"></script>
+	<script>
+		Validator('#register-form', '.auth-form__group', 3);
+		Validator('#login-form', '.auth-form__group', 3);
+	</script>
+
 	<meta charset="UTF-8">
 </head>
 
@@ -168,7 +179,7 @@
 					<input type="checkbox" hidden class="header__search-checkbox" id="mobile-search-checkbox">
 
 					<div class="header__logo hide-on-tablet">
-						<a href="http://93.188.162.82:8081" class="header__logo-link">
+						<a href="index.html" class="header__logo-link">
 							<img src="Images/logo.png" class="header__logo-img" />
 						</a>
 					</div>										
@@ -214,6 +225,13 @@
 			</ul>	
         </header>
 
+		<div id="myModal" class="modal">
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<p><b>đặt hàng thành công</b></p>
+			</div>
+		</div>
+
 		<div class="container">
 			<div class="head_str">GIỎ HÀNG</div>
 			<div class="head_list">
@@ -227,7 +245,7 @@
 			<div id="tongtien">
 				<span>tổng số tiền:</span>
 				<span style="color: tomato;font-size: 20px;" id="tongtien2">1.000.000 đ</span>
-				<button id="btn_thanhtoan" class="btn_green">thanh toán</button>
+				<button id="btn_thanhtoan" class="btn_green" onclick="book()">thanh toán</button>
 			</div>
 		</div>
 
@@ -454,17 +472,5 @@
 			</form>
 		</div>
 	</div>
-
-    <script src="./Javascript/giohang.js"></script>
 </body>
-	
-<script src="./Javascript/general-bugs.js"></script>
-
-<script src="./Javascript/handle-form.js"></script>
-<script src="./Javascript/validator.js"></script>
-<script>
-	Validator('#register-form', '.auth-form__group', 3);
-	Validator('#login-form', '.auth-form__group', 3);
-</script>
-
 </html>

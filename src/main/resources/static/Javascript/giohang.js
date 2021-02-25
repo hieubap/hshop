@@ -1,8 +1,17 @@
-url_product = 'http://93.188.162.82:8081/product/search';
-
 var listSelect= localStorage.getItem("list_select_keep")==null?[]:JSON.parse(localStorage.getItem("list_select_keep"));
 
 var pageProducts;
+var modal;
+var span;
+
+function run(){
+    fetProducts();
+    modal = document.getElementById("myModal");
+    span = document.getElementsByClassName("close")[0];
+    span.onclick = function() {
+        modal.style.display = "none";
+      }
+}
 
 function keepData(){
     localStorage.setItem("list_select_keep",JSON.stringify(listSelect));
@@ -11,6 +20,8 @@ function keepData(){
 function showSelect(){
     var html_ = '';
     var sum = 0;
+    if(listSelect == null) listSelect = [];
+    
     for(i=0;i<listSelect.length;i++)
     for(j = 0;j<pageProducts.length;j++){
         var pageProduct = pageProducts[j];
@@ -30,11 +41,11 @@ function showSelect(){
                     Phân loại: Hàng Quốc tế
                     </span>
             </div>
-        <span class="list_gia">${convertMoney(pageProduct.newPrice)} </span>
+        <span class="list_gia">${convertPrice(pageProduct.newPrice)} </span>
         <span class="list_select_sub" onclick="addSoLuong(${pageProduct.id},-1)">_</span>
         <span class="list_soluong">${listSelect[i].s}</span>
         <span class="list_select_add" onclick="addSoLuong(${pageProduct.id},1)">+</span>
-        <span class="list_tien">${convertMoney(pageProduct.newPrice*listSelect[i].s)}</span>
+        <span class="list_tien">${convertPrice(pageProduct.newPrice*listSelect[i].s)}</span>
         <span class="list_select_remove" onclick="removeSelect(1)">Xóa</span>
         </div>
         </div>
@@ -45,7 +56,7 @@ function showSelect(){
     document.getElementById('bill_id').innerHTML = html_;
 
     html_ = `<span style="color: tomato;font-size: 20px;"
-     id="tongtien2">${convertMoney(sum)}</span>`;
+     id="tongtien2">${convertPrice(sum)}</span>`;
     document.getElementById('tongtien2').innerHTML = html_;
 }
 
@@ -71,19 +82,6 @@ function removeSelect(id){
     showSelect();
 }
 
-function convertMoney(money){
-    var price = money+' đ';
-    var len = price.length;
-    if (len < 5)
-    return price;
-    if (len < 8)
-    return price.substring(0,len-5)+"."+price.substring(len-5);
-    if (len < 11)
-      return price.substring(0,len-8)+"."+price.substring(len-8,len-5)+"."+price.substring(len-5);
-    if (len < 14)
-      return price.substring(0,len-11)+"."+price.substring(len-11,len-8)+"."+price.substring(len-8,len-5)+"."+price.substring(len-5);
-  }
-
 // var pageProducts;
 function fetProducts(){
     fetch(url_product,{
@@ -94,172 +92,42 @@ function fetProducts(){
             response.json().then(function (text){
                 pageProducts = JSON.parse(JSON.stringify(text)).data;
                 console.log(pageProducts);
-                renderPageProducts(pageProducts);
+                renderProducts(pageProducts);
                 showSelect();
             })
         }
     })
 }
 
-fetProducts();
-
-// handle and render products
-function renderPageProducts(pageProducts) {
-    let suggestion1 = document.querySelector('.suggestion1 .row'); // get element of product container
-    let suggestion2 = document.querySelector('.suggestion2 .row'); // get element of product container
-    let suggestion3 = document.querySelector('.suggestion3 .row'); // get element of product container
-    
-    let productEls = ''; // save page products 
-
-    for (i = 0;i< pageProducts.length ; i++) {
-        if(i > 4 ) break;
-        pageProduct = pageProducts[i];
-
-        productEls += 
-        `<div class="col l-2-4 m-4 c-6">
-            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
-                <img src=" ${pageProduct.img}" class="home-product-item__img">
-                <div class="home-product-item__name"> ${pageProduct.name} </div>
-                <div class="home-product-item__price">
-                    <span class="home-product-item__price-old"> ${convertMoney(pageProduct.oldPrice)} </span>
-                    <span class="home-product-item__price-current"> ${convertMoney(pageProduct.newPrice)} </span>
-                </div>
-                <div class="home-product-item__action">
-                    <span class="home-product-item__like home-product-item__like--liked">
-                        <i class="home-product-item__like-icon-empty far fa-heart"></i>
-                        <i class="home-product-item__like-icon-fill fas fa-heart"></i>
-                    </span>
-                    <div class="home-product-item__rating">
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span class="home-product-item__sold"> ${pageProduct.numberSell + ' đã bán'} </span>
-                </div>
-                <div class="home-product-item__origin">
-                    <span class="home-product-item__brand"> NEW </span>
-                    <span class="home-product-item__origin-name"> ${pageProduct.manufactureCountry} </span>
-                </div>
-                <div class="product-favourite">
-                    <i class="fas fa-check"></i>
-                    <span> Yêu thích </span>
-                </div>
-                <div class="product-sale-off">
-                    <span class="product-sale-off__percent"> ${pageProduct.per}% </span>
-                    <span class="product-sale-off__label"> GIẢM </span>
-                </div>
-                
-            </a>
-        </div>`
-    }
-    if (suggestion1) {
-        suggestion1.innerHTML = productEls;
-    }
-
-    let productEls2 = '';
-
-    for (i = 5;i< pageProducts.length ; i++) {
-        if(i > 9 ) break;
-        pageProduct = pageProducts[i];
-
-        productEls2 += 
-        `<div class="col l-2-4 m-4 c-6">
-            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
-                <img src=" ${pageProduct.img}" class="home-product-item__img">
-                <div class="home-product-item__name"> ${pageProduct.name} </div>
-                <div class="home-product-item__price">
-                    <span class="home-product-item__price-old"> ${convertMoney(pageProduct.oldPrice)} </span>
-                    <span class="home-product-item__price-current"> ${convertMoney(pageProduct.newPrice)} </span>
-                </div>
-                <div class="home-product-item__action">
-                    <span class="home-product-item__like home-product-item__like--liked">
-                        <i class="home-product-item__like-icon-empty far fa-heart"></i>
-                        <i class="home-product-item__like-icon-fill fas fa-heart"></i>
-                    </span>
-                    <div class="home-product-item__rating">
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span class="home-product-item__sold"> ${pageProduct.numberSell + ' đã bán'} </span>
-                </div>
-                <div class="home-product-item__origin">
-                    <span class="home-product-item__brand"> NEW </span>
-                    <span class="home-product-item__origin-name"> ${pageProduct.manufactureCountry} </span>
-                </div>
-                <div class="product-favourite">
-                    <i class="fas fa-check"></i>
-                    <span> Yêu thích </span>
-                </div>
-                <div class="product-sale-off">
-                    <span class="product-sale-off__percent"> ${pageProduct.per}% </span>
-                    <span class="product-sale-off__label"> GIẢM </span>
-                </div>
-                
-            </a>
-        </div>`
-    }
-    if (suggestion2) {
-        suggestion2.innerHTML = productEls2;
-    }
-
-    let productEls3 = '';
-
-    for (i = 10;i< pageProducts.length ; i++) {
-        if(i > 14 ) break;
-        pageProduct = pageProducts[i];
-
-        productEls3 += 
-        `<div class="col l-2-4 m-4 c-6">
-            <a href="product-info.html" id="${pageProduct.id}" class="home-product-item">
-                <img src=" ${pageProduct.img}" class="home-product-item__img">
-                <div class="home-product-item__name"> ${pageProduct.name} </div>
-                <div class="home-product-item__price">
-                    <span class="home-product-item__price-old"> ${convertMoney(pageProduct.oldPrice)} </span>
-                    <span class="home-product-item__price-current"> ${convertMoney(pageProduct.newPrice)} </span>
-                </div>
-                <div class="home-product-item__action">
-                    <span class="home-product-item__like home-product-item__like--liked">
-                        <i class="home-product-item__like-icon-empty far fa-heart"></i>
-                        <i class="home-product-item__like-icon-fill fas fa-heart"></i>
-                    </span>
-                    <div class="home-product-item__rating">
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="home-product-item__star--gold fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span class="home-product-item__sold"> ${pageProduct.numberSell + ' đã bán'} </span>
-                </div>
-                <div class="home-product-item__origin">
-                    <span class="home-product-item__brand"> NEW </span>
-                    <span class="home-product-item__origin-name"> ${pageProduct.manufactureCountry} </span>
-                </div>
-                <div class="product-favourite">
-                    <i class="fas fa-check"></i>
-                    <span> Yêu thích </span>
-                </div>
-                <div class="product-sale-off">
-                    <span class="product-sale-off__percent"> ${pageProduct.per}% </span>
-                    <span class="product-sale-off__label"> GIẢM </span>
-                </div>
-                
-            </a>
-        </div>`
-    }
-    if (suggestion3) {
-        suggestion3.innerHTML = productEls3;
-    }
-
-}
-
-
 function clickthemhang(id){
     listSelect.push(id);
     showSelect();
 }
+
+
+function book(){
+    console.log(listSelect);
+    var body = '{"listFoodsOrder":{';
+    for (i=0;i<listSelect.length-1;i++){
+      body += '"'+listSelect[i].id+'":'+listSelect[i].s+',';
+    }
+    body += '"'+listSelect[listSelect.length-1].id+'":'+listSelect[listSelect.length-1].s+'},';
+    body += '"userId":1'
+        + '}';
+    console.log(JSON.parse(JSON.stringify(body)));
+  
+    fetch(url_order,{
+      method: 'post',
+      headers:{
+        'content-type':'application/json'
+      },
+      body: JSON.parse(JSON.stringify(body))
+    }).then(function (response) {
+      if (response.status === 200) {
+          modal.style.display = "block";
+          localStorage.removeItem('list_select_keep')
+          listSelect = null;
+          showSelect();
+      }
+    });
+  }

@@ -49,5 +49,3 @@ function handleForms() {
         modalLayer.style.display = 'none';
     }
 }
-
-handleForms();

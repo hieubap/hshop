@@ -40,6 +40,14 @@ public class ProductServiceImpl implements ProductService {
       throw new BaseException(400,
           "newPrice is null or empty or not exactly. enter newPrice",null);
     }
+    if (dto.getNewPrice()>999999999){
+      throw new BaseException(400,
+          "newPrice cant over 999.999.999",null);
+    }
+    if (dto.getOldPrice() != null && dto.getOldPrice()>999999999){
+      throw new BaseException(400,
+          "oldPrice cant over 999.999.999",null);
+    }
     if (dto.getImg() == null || dto.getImg().isEmpty()){
       throw new BaseException(400,
           "img is null or empty or not exactly. enter img",null);

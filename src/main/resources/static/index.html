@@ -12,6 +12,18 @@
 	<link rel="stylesheet" type="text/css" href="CSS/responsive.css" />
     <link rel="stylesheet" href="font/css/all.css">
 	<meta charset="UTF-8">
+
+	<script src="./Javascript/common/common.js"></script>
+	<script src="./Javascript/index.js"></script>
+	<script src="./Javascript/general-bugs.js"></script>
+
+	<script src="./Javascript/handle-form.js"></script>
+	<script src="./Javascript/validator.js"></script>
+	<script>
+		Validator('#register-form', '.auth-form__group', 3);
+		Validator('#login-form', '.auth-form__group', 3);
+	</script>
+
 </head>
 <body>
 	<!-- Block Element Modifier -->
@@ -186,7 +198,7 @@
 							</div>
 						</div>
 	
-						<button class="header__search-btn" id="btn_search">
+						<button class="header__search-btn" id="search_btn">
 							<i class="header__search-btn-icon fas fa-search"></i>
 						</button>
 					</div>
@@ -259,8 +271,7 @@
 								</div>
 								
 								<!-- Content category items -->
-								<ul class="category-list">				
-									
+								<ul class="category-list">
 								</ul>
 							</nav>
 						</div>
@@ -590,15 +601,4 @@
 		</div>
 	</div>
 </body>
-	
-<script src="./Javascript/index.js"></script>
-<script src="./Javascript/general-bugs.js"></script>
-
-<script src="./Javascript/handle-form.js"></script>
-<script src="./Javascript/validator.js"></script>
-<script>
-	Validator('#register-form', '.auth-form__group', 3);
-	Validator('#login-form', '.auth-form__group', 3);
-</script>
-
 </html>

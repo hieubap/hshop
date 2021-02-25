@@ -1,11 +1,29 @@
-const url_product = 'http://93.188.162.82:8081/product/search?name=';
 
 var listSelect= localStorage.getItem("list_select_keep")==null?[]:JSON.parse(localStorage.getItem("list_select_keep"));
 
 var pageProducts;
 
+function run(){
+    const url = new URLSearchParams(location.search);
+    var search = url.get('isSearch');
+    var name = url.get('name');
+    if(search){
+        document.getElementById('search_input').value = name;
+        console.log('run search');
+        document.getElementById('qc').innerHTML = '';
+    }
+    fetProducts();
+    console.log('run');
+    sortPrice();
+    sortProducts();
+    renderCgrItems();
+    hoverCategoryItems();
+    addButtonAction();
+}
+
 function fetProducts(){
-    var name = document.getElementById('search_input').value;
+    var name = 'name='+document.getElementById('search_input').value;
+
     fetch(url_product+name,{
         method: 'get'
     }).then(function (response){
@@ -13,80 +31,19 @@ function fetProducts(){
         {
             response.json().then(function (text){
                 pageProducts = JSON.parse(JSON.stringify(text)).data;
-                console.log(pageProducts);
                 renderPageProducts(pageProducts);
-                showSelect();
+                showSelect(listSelect,pageProducts);
             })
         }
     })
 }
 
-fetProducts();
-
-function showSelect(){
-    var html_ = '';
-    for(i=0;i<listSelect.length;i++)
-    for(j = 0;j<pageProducts.length;j++){
-        var pageProduct = pageProducts[j];
-        if(listSelect[i].id == pageProduct.id) {
-        html_ += `
-        <li title="${pageProduct.title}" class="header__cart-item">
-        <div class="header__cart-img-wrapper">
-        <img src="${pageProduct.img}" class="header__cart-img">
-        </div>
-        <div class="header__cart-item-info">
-        <div class="header__cart-item-head">
-        <div class="header__cart-item-name">${pageProduct.name}</div>
-        <div class="header__cart-item-price-wrap">
-        <span class="header__cart-item-price">${convertMoney(pageProduct.newPrice)}</span>
-        <span class="header__cart-item-multiply">x</span>
-        <span class="header__cart-item-qnt">${listSelect[i].s}</span>
-        </div>												
-        </div>
-        <div class="header__cart-item-body">
-        <span class="header__cart-item-description">
-        Phân loại: Hàng Quốc tế
-        </span>
-        <span class="header__cart-item-remove" onclick="removeSelect(${pageProduct.id})">Xóa</span>
-        </div>
-        </div></li>`;
-        }
-    }
-    document.getElementById('list_select').innerHTML = html_;
-    document.getElementById('number_select').innerHTML = listSelect.length;
-}
-
-function removeSelect(id){
-    for(i=0;i<listSelect.length;i++)
-    {
-        if(listSelect[i].id == id){
-            var a1 = listSelect.slice(0,i);
-            var a2 = listSelect.slice(i+1,listSelect.length);
-            listSelect = a1.concat(a2);
-            showSelect();
-            keepData();
-        }
-    }
-}
-
-function convertMoney(money){
-    var price = money+' đ';
-    var len = price.length;
-    if (len < 5)
-    return price;
-    if (len < 8)
-    return price.substring(0,len-5)+"."+price.substring(len-5);
-    if (len < 11)
-      return price.substring(0,len-8)+"."+price.substring(len-8,len-5)+"."+price.substring(len-5);
-    if (len < 14)
-      return price.substring(0,len-11)+"."+price.substring(0,len-8)+"."+price.substring(len-8,len-4)+"."+price.substring(len-4);
-  }
-
-
 // handle and render products
 function renderPageProducts(pageProducts) {
     let productElsCtn = document.querySelector('.home-product .row'); // get element of product container
     let productEls = ''; // save page products 
+
+    console.log(pageProducts);
 
     for (let pageProduct of pageProducts) {
         productEls += 
@@ -95,8 +52,8 @@ function renderPageProducts(pageProducts) {
                 <img src=" ${pageProduct.img}" class="home-product-item__img">
                 <div class="home-product-item__name"> ${pageProduct.name} </div>
                 <div class="home-product-item__price">
-                    <span class="home-product-item__price-old"> ${convertMoney(pageProduct.oldPrice)} </span>
-                    <span class="home-product-item__price-current"> ${convertMoney(pageProduct.newPrice)} </span>
+                    <span class="home-product-item__price-old"> ${convertPrice(pageProduct.oldPrice)} </span>
+                    <span class="home-product-item__price-current"> ${convertPrice(pageProduct.newPrice)} </span>
                 </div>
                 <div class="home-product-item__action">
                     <span class="home-product-item__like home-product-item__like--liked">
@@ -170,8 +127,6 @@ function sortPrice() {
     }
 }
 
-sortPrice();
-
 // sort products
 function sortProducts() {
     let btnClassList = document.getElementsByClassName('home-filter__btn'); // get button class list
@@ -214,8 +169,6 @@ function sortProducts() {
         }
     }
 }
-
-sortProducts();
 
 // CATEGORY ITEMS
 // handle and render category items
@@ -299,8 +252,6 @@ function renderCgrItems() {
     cgrElsCtn.innerHTML = cgrEls;
 }
 
-renderCgrItems();
-
 // handle event when the user hovers the category item
 function hoverCategoryItems() {
     let cgrElIdx = -1; // initialize the ordinal numbers of category items
@@ -344,28 +295,16 @@ function hoverCategoryItems() {
     }
 }
 
-hoverCategoryItems();
-
 function addButtonAction(){
     document.getElementById('xem_gio_hang').addEventListener('click',function (e){
-        location.replace('http://93.188.162.82:8081/giohang.html');
+        location.replace(url_giohang);
     })
     document.getElementById('search_input').addEventListener('keypress',function (e){
         if (event.keyCode === 13) {
-            fetProducts();
-            this.blur();
-            console.log('btn click');
-            document.getElementById('qc').innerHTML = '';
+            searchProducts();
       }
     })
-    document.getElementById('btn_search').addEventListener('click',function (e){
-            fetProducts();
-            this.blur();
-            console.log('btn click');
-            document.getElementById('qc').innerHTML = '';
+    document.getElementById('search_btn').addEventListener('click',function (e){
+            searchProducts();
     })
-    
-    
 }
-
-addButtonAction();

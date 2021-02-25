@@ -7,6 +7,12 @@
     display: flex;
     flex-direction: row;
 }
+.container {
+  border: 1px solid #ddd;
+  background-color: white;
+  height: auto;
+  margin: 30px 15% 0 15%;
+}
 
 .item_information {
     border: 1px solid #ddd;
