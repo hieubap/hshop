@@ -14,16 +14,17 @@
 
 	<link rel="stylesheet" type="text/css" href="CSS/management.css" />
 
-	<script src="Javascript/common/common.js"></script>
-	<script src="Javascript/chart/Chart.min.js"></script>
-	<script src="./Javascript/management.js"></script>
-	
 	<script src="./Javascript/general-bugs.js"></script>
 	<script src="./Javascript/handle-form.js"></script>
 	<script src="./Javascript/validator.js"></script>
+	
+	<script src="Javascript/common/common.js"></script>
+	<script src="Javascript/chart/Chart.min.js"></script>
+	<script src="./Javascript/management.js"></script>
 <script>
 	Validator('#register-form', '.auth-form__group', 3);
 	Validator('#login-form', '.auth-form__group', 3);
+	// Validator('#create-product_form', '.auth-form__group', 3);
 </script>
 
   
@@ -101,9 +102,9 @@
 						</li>
 						<li id="register-item" class="header__navbar-item header__navbar-item-separate">Đăng Ký</li>
 						<li id="login-item" class="header__navbar-item">Đăng Nhập</li>
-						<!-- <li class="header__navbar-item header__navbar-user">
+						<li class="header__navbar-item header__navbar-user">
 							<img src="Images/user.png" class="header__navbar-user-img"></img>
-							<span class="header__navbar-user-name">Minh Hưng</span>
+							<span class="header__navbar-user-name">Ngô Hiếu</span>
 
 							<ul class="header__navbar-user-menu">
 								<li class="header__navbar-user-item">
@@ -119,7 +120,7 @@
 									<a href="">Đăng xuất</a>
 								</li>
 							</ul>
-						</li> -->
+						</li>
 					</ul>
 				</nav>
 
@@ -262,17 +263,20 @@
 
 
 <div class="container" style="margin-top: 100px;font-size: 17px">
+	<button id="create_btn" class="btn btn-default" style="margin-top:40px">Thêm mới</button> 
   <h1 class="block-title text-center wow fadeIn" style="text-align: center;
   padding-top: 50px;" data-wow-duration="1s" data-wow-delay="0.1s">
     Menu
   </h1>
+  
   <div id="list_menu"></div>
   <div>
-    <button onclick="goMenuL()" class="btn_next">
-      <
-    </button>
     <button onclick="goMenuR()" class="btn_next">
       >
+    </button>
+	<label class="btn_next" id="menu_page">1</label>
+    <button onclick="goMenuL()" class="btn_next">
+      <
     </button>
   </div>
 </div>
@@ -284,10 +288,11 @@
   </h1>
   <div id="list_bill"></div>
   <div>
-    <button onclick="goBillR()" class="btn-default">
+    <button onclick="goBillR()" class="btn_next">
       >
     </button>
-    <button onclick="goBillL()" class="btn">
+	<label class="btn_next" id="bill_page">1</label>
+    <button onclick="goBillL()" class="btn_next">
       <
     </button>
   </div>
@@ -399,7 +404,7 @@
 
 		<div class="modal__body">
 			<!-- Register Form -->
-		    <form id="register-form" class="auth-form">
+		    <form id="register-form" class="auth-form fm">
 				<div class="auth-form__container">
 					<div class="auth-form__header">
 						<div class="auth-form__heading">Đăng ký</div>
@@ -454,7 +459,7 @@
 			</form> 
 
 			<!-- Login Form -->
-			<form id="login-form" class="auth-form">
+			<form id="login-form" class="auth-form fm">
 				<div class="auth-form__container">
 					<div class="auth-form__header">
 						<div class="auth-form__heading">Đăng nhập</div>
@@ -462,10 +467,10 @@
 
 					<div class="auth-form__groups">
 						<div class="auth-form__group">
-							<input id="email" rule="email" type="text" class="auth-form__input" placeholder="Email của bạn" />
+							<input id="login-username-input" rule="email" type="text" class="auth-form__input" placeholder="Email của bạn" />
 						</div>
 						<div class="auth-form__group">
-							<input id="password" rule="password" type="password" class="auth-form__input" placeholder="Mật khẩu của bạn" />
+							<input id="login-password-input" rule="password" type="password" class="auth-form__input" placeholder="Mật khẩu của bạn" />
 						</div>
 					</div>
 					
@@ -479,7 +484,7 @@
 
 					<div class="auth-form__controls">
 						<button class="btn auth-form__controls-back">TRỞ LẠI</button>
-						<button class="btn btn--primary">ĐĂNG NHẬP</button>
+						<button id="btn-login" class="btn btn--primary">ĐĂNG NHẬP</button>
 					</div>
 					
 					<div class="auth-form__switch-wrapper">
@@ -502,6 +507,162 @@
 							Kết nối với Google
 						</span>		
 					</a>
+				</div>
+			</form>
+			
+			<form id="create-product-form" class="create-form fm">
+				<div class="auth-form__container">
+					<div class="auth-form__header">
+						<div class="auth-form__heading">Thêm mới</div>
+					</div>
+
+					<div style="display:flex;flex-direction: row;">
+						<div class="" style="flex-basis: 50%;">
+							<div class="create_groups">
+								<label>Tiêu đề</label>
+								<input id="create_title" type="text" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Tên</label>
+								<input id="" type="text" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Giá cũ</label>
+								<input id="" value="0" type="number" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Giá mới</label>
+								<input id="" value="0" type="number" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Link ảnh</label>
+								<input id="" value="http://93.188.162.82:8081/Images/3942p_21c_1x_3c19c696-c546-4248-814a-042ebdb0df20_800x.png"
+								 type="text" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Số lượng</label>
+								<input id="" value="0" type="number" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Chi Tiết</label>
+								<input id="" type="text" class="create_input" placeholder="" />
+							</div>
+						</div>
+						<div class="create_groups" style="flex-basis: 50%;">
+							<div class="create_groups">
+								<label>Loại</label>
+								<input id="" type="text" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Màu sắc</label>
+								<input id="" type="text" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Nhãn hiệu</label>
+								<input id="" type="text" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Xuất xứ</label>
+								<input id="" type="text" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Nhà phân phối</label>
+								<input id="" type="text" class="create_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Thể tích</label>
+								<input id="" value="0" type="number" class="create_input" placeholder="0" />
+							</div>
+							<div class="create_groups">
+								<label>Khối lượng</label>
+								<input id="" value="0" type="number" class="create_input" placeholder="0" />
+							</div>
+						</div>
+					</div>
+					
+
+					<div class="auth-form__controls" >
+						<button id="back_btn" class="btn create_btn_cancel">TRỞ LẠI</button>
+						<button id="cancel_btn" class="btn create_btn_cancel">HỦY</button>
+						<button id="create_btn2" class="btn create_btn_cancel">THÊM MỚI</button>
+					</div>
+				</div>
+			</form>
+			<form id="update-product-form" class="create-form fm">
+				<div class="auth-form__container">
+					<div class="auth-form__header">
+						<div class="auth-form__heading">Cập nhật</div>
+					</div>
+
+					<div style="display:flex;flex-direction: row;">
+						<div class="" style="flex-basis: 50%;">
+							<div class="create_groups">
+								<label>Tiêu đề</label>
+								<input id="update_title" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Tên</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Giá cũ</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Giá mới</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Link ảnh</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Số lượng</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Chi Tiết</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+						</div>
+						<div class="create_groups" style="flex-basis: 50%;">
+							<div class="create_groups">
+								<label>Loại</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Màu sắc</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Nhãn hiệu</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Xuất xứ</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Nhà phân phối</label>
+								<input id="" type="text" class="update_input" placeholder="" />
+							</div>
+							<div class="create_groups">
+								<label>Thể tích</label>
+								<input id="" type="number" class="update_input" placeholder="0" />
+							</div>
+							<div class="create_groups">
+								<label>Khối lượng</label>
+								<input id="" type="text" class="update_input" placeholder="0" />
+							</div>
+						</div>
+					</div>
+					
+
+					<div class="auth-form__controls" >
+						<button id="update-back_btn" class="btn create_btn_cancel">TRỞ LẠI</button>
+						<button id="update-cancel_btn" class="btn create_btn_cancel">HỦY</button>
+						<button id="update-btn" class="btn create_btn_cancel">THÊM MỚI</button>
+					</div>
 				</div>
 			</form>
 		</div>

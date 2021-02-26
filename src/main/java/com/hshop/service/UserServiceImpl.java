@@ -75,6 +75,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public ResponseEntity<?> detail(String userDTO) {
+
+    return null;
+  }
+
+  @Override
   public ResponseEntity<?> update(Long id, UserDTO userDTO) throws Exception {
     if (!userRepository.existsById(id)) {
       throw new BaseException(400,"id is not exist. check your id",id);

@@ -26,6 +26,11 @@ public class UserController {
     return userService.search(userDTO);
   }
 
+  @GetMapping(value = "")
+  public ResponseEntity<?> detail(@Param(value = "token") String token){
+    return userService.detail(token);
+  }
+
   @PostMapping(value = "/create")
   public ResponseEntity<?> create(@RequestBody UserDTO dto){
     return userService.register(dto);

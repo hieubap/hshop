@@ -493,7 +493,7 @@
 
 		<div class="modal__body">
 			<!-- Register Form -->
-		    <form id="register-form" class="auth-form">
+		    <form id="register-form" class="auth-form fm">
 				<div class="auth-form__container">
 					<div class="auth-form__header">
 						<div class="auth-form__heading">Đăng ký</div>
@@ -548,7 +548,7 @@
 			</form> 
 
 			<!-- Login Form -->
-			<form id="login-form" class="auth-form">
+			<form id="login-form" class="auth-form fm">
 				<div class="auth-form__container">
 					<div class="auth-form__header">
 						<div class="auth-form__heading">Đăng nhập</div>
@@ -556,10 +556,10 @@
 
 					<div class="auth-form__groups">
 						<div class="auth-form__group">
-							<input id="email" rule="email" type="text" class="auth-form__input" placeholder="Email của bạn" />
+							<input id="login-username-input" rule="email" type="text" class="auth-form__input" placeholder="Email của bạn" />
 						</div>
 						<div class="auth-form__group">
-							<input id="password" rule="password" type="password" class="auth-form__input" placeholder="Mật khẩu của bạn" />
+							<input id="login-password-input" rule="password" type="password" class="auth-form__input" placeholder="Mật khẩu của bạn" />
 						</div>
 					</div>
 					
@@ -573,7 +573,7 @@
 
 					<div class="auth-form__controls">
 						<button class="btn auth-form__controls-back">TRỞ LẠI</button>
-						<button class="btn btn--primary">ĐĂNG NHẬP</button>
+						<button id="btn-login" class="btn btn--primary">ĐĂNG NHẬP</button>
 					</div>
 					
 					<div class="auth-form__switch-wrapper">
