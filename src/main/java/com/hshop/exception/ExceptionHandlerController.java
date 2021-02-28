@@ -12,11 +12,7 @@ public class ExceptionHandlerController {
 
   @ExceptionHandler(BaseException.class)
   public ResponseEntity<?> handleException(BaseException ex) {
-    ResponseDTO responseDTO = new ResponseDTO();
-    responseDTO.setCode(ex.getCode());
-    responseDTO.setMessage(ex.getMessage());
-    responseDTO.setData(ex.getData());
-
-    return new ResponseEntity<>(responseDTO, HttpStatus.valueOf(ex.getCode()));
+    ResponseDTO<?> responseDTO = ex.getResponseDTO();
+    return new ResponseEntity<>(responseDTO, HttpStatus.valueOf(ex.getResponseDTO().getCode()));
   }
 }

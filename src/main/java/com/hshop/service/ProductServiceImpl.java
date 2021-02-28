@@ -1,7 +1,7 @@
 package com.hshop.service;
-import java.time.LocalDateTime;
 
 
+import com.hshop.converter.Converter;
 import com.hshop.dao.model.ProductEntity;
 import com.hshop.dao.repository.ProductRepository;
 import com.hshop.dto.ProductDTO;
@@ -10,29 +10,35 @@ import com.hshop.exception.BaseException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl implements ProductService {
   @Autowired
-  private ProductRepository foodRepository;
+  private ProductRepository productRepository;
 
   @Override
-  public ResponseEntity<?> search(ProductDTO foodDTO) {
+  public ResponseDTO<?> search(ProductDTO foodDTO, Integer page, Integer size) {
     List<ProductDTO> listDto = new ArrayList<>();
-    List<ProductEntity> list = foodRepository.search(foodDTO);
+    
+    Sort sort = Sort.by(Sort.Direction.ASC,"id"); 
+    Page<ProductEntity> list = productRepository.search(foodDTO,
+        PageRequest.of(page-1,size,sort));
 
     for (ProductEntity entity : list){
-      listDto.add(ConvertService.convertProductEntityToDTO(entity));
+      listDto.add(Converter.convertProductToDTO(entity));
     }
 
-    return new ResponseEntity<>(new ResponseDTO<>(listDto), HttpStatus.OK);
+    return new ResponseDTO<>(200,"search ok",new ResponseDTO<>(listDto),listDto.size(),
+        list.toList().size());
   }
 
   @Override
-  public ResponseEntity<?> create(ProductDTO dto) throws BaseException {
+  public ResponseDTO<?> create(ProductDTO dto) throws BaseException {
     if (dto.getName() == null || dto.getName().isEmpty()){
       throw new BaseException(400,"name is null or empty. enter name",null);
     }
@@ -53,37 +59,35 @@ public class ProductServiceImpl implements ProductService {
           "img is null or empty or not exactly. enter img",null);
     }
 
-    ProductEntity entity = ConvertService.convertProductDTOToEntity(dto);
+    ProductEntity entity = Converter.convertProductToEntity(dto);
 
-    foodRepository.save(entity);
+    productRepository.save(entity);
 
-    return new ResponseEntity<>(new ResponseDTO<>(entity),HttpStatus.OK);
+    return new ResponseDTO<>(200,"create ok",entity);
   }
 
   @Override
-  public ResponseEntity<?> update(Long id, ProductDTO dto) throws Exception {
+  public ResponseDTO<?> update(Long id, ProductDTO dto) throws Exception {
     if (id == null){
       throw new BaseException(400,"id is null. enter id",dto);
     }
-    if (!foodRepository.existsById(id)){
+    if (!productRepository.existsById(id)){
       throw new BaseException(400,"id is not exist. check your id",dto);
     }
-    ProductEntity entity = ConvertService.convertProductDTOToEntity(dto);
+    ProductEntity entity = Converter.convertProductToEntity(dto);
     entity.setId(id);
 
-    foodRepository.save(entity);
+    productRepository.save(entity);
 
-    return new ResponseEntity<>(new ResponseDTO<>(entity),HttpStatus.OK);
+    return new ResponseDTO<>(200,"update ok",entity);
   }
 
   @Override
-  public ResponseEntity<?> delete(Long id) throws Exception {
-    if (!foodRepository.existsById(id)){
+  public ResponseDTO<?> delete(Long id) throws Exception {
+    if (!productRepository.existsById(id)){
       throw new BaseException(400,"id is not exist. check your id",id);
     }
-    foodRepository.deleteById(id);
-    ResponseDTO<?> responseDTO = new ResponseDTO(200,"delete id '" + id +"' successful",null);
-
-    return new ResponseEntity<>(responseDTO,HttpStatus.OK);
+    productRepository.deleteById(id);
+    return new ResponseDTO<>(200,"delete ok",null);
   }
 }

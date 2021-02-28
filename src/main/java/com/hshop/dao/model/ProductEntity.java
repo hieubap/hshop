@@ -6,6 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -43,6 +47,16 @@ public class ProductEntity {
 
   private LocalDateTime createdDate;
   private LocalDateTime updatedDate;
+
+  private Short deleted = 0;
+
+  @OneToOne
+  @JoinColumn(name = "seller_id")
+  private UserEntity seller;
+
+  @OneToOne
+  @JoinColumn(name = "store_id")
+  private StoreEntity store;
 
   @PrePersist
   void prePersist() {

@@ -1,6 +1,8 @@
 package com.hshop.dao.model;
 
+import com.hshop.enums.RoleType;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,10 +29,15 @@ public class UserEntity {
   private String address;
   private String email;
 
+  private String username;
   private String password;
+  private RoleType role;
 
   private LocalDateTime createdDate;
   private LocalDateTime updatedDate;
+
+  @Column(name = "deleted",nullable = false)
+  private Short deleted = 0;
 
   @PrePersist
   void prePersist() {

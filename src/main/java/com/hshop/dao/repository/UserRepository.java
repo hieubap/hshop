@@ -2,7 +2,6 @@ package com.hshop.dao.repository;
 
 
 import com.hshop.dao.model.UserEntity;
-import com.hshop.dto.LoginDTO;
 import com.hshop.dto.UserDTO;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,13 +19,7 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
   )
   List<UserEntity> search(UserDTO dto);
 
-  @Query(
-      value = " select u.* from user_ u "
-          + " where true "
-          + " and ( u.name = :#{#dto.username} or :#{#dto.username} is null ) "
-          + " and ( u.phone = :#{#dto.phone} or :#{#dto.phone} is null ) "
-          + " and ( u.email = :#{#dto.email} or :#{#dto.email} is null ) ",
-      nativeQuery = true
-  )
-  UserEntity getUser(LoginDTO dto);
+  UserEntity findByUsername(String name);
+
+  Boolean existsByUsername(String username);
 }

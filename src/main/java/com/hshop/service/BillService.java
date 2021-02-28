@@ -1,18 +1,19 @@
 package com.hshop.service;
 
+import com.hshop.dto.BillDTO;
 import com.hshop.dto.OrderDTO;
+import com.hshop.dto.ResponseDTO;
 import java.time.LocalDate;
-import org.springframework.http.ResponseEntity;
 
 
 public interface BillService {
-  public ResponseEntity<?> search();
-  public ResponseEntity<?> create(OrderDTO dto) throws Exception;
-  public ResponseEntity<?> update(Long id,OrderDTO dto) throws Exception;
-  public ResponseEntity<?> delete(Long id) throws Exception;
+  public ResponseDTO<?> search(BillDTO dto,Integer page,Integer size);
+  public ResponseDTO<?> create(OrderDTO dto) throws Exception;
+  public ResponseDTO<?> update(Long id,OrderDTO dto) throws Exception;
+  public ResponseDTO<?> delete(Long id) throws Exception;
 
-  public ResponseEntity<?> storeConfirm(Long id) throws Exception;
-  public ResponseEntity<?> cancel(Long id) throws Exception;
-  public ResponseEntity<?> delivered(Long id) throws Exception;
-  public ResponseEntity<?> dashboard(LocalDate start,LocalDate end);
+  public ResponseDTO<?> storeConfirm(Long id) throws Exception;
+  public ResponseDTO<?> cancel(Long id) throws Exception;
+  public ResponseDTO<?> delivered(Long id) throws Exception;
+  public ResponseDTO<?> dashboard(LocalDate start,LocalDate end);
 }

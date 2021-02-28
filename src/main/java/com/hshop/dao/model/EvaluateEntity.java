@@ -1,17 +1,14 @@
 package com.hshop.dao.model;
 
-import com.hshop.enums.BillStatus;
 import java.time.LocalDateTime;
-import java.util.List;
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -23,24 +20,32 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "bill")
-public class BillEntity {
+@Table(name = "evaluate")
+public class EvaluateEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private BillStatus status;
+  private String content;
+  private Short star;
 
-  @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-  private List<BillProductEntity> listFoods;
+  @Column(name = "user_id")
+  private Long userId;
+
+  @Column(name = "product_id")
+  private Long productId;
+
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
-  private UserEntity buyer;
+  @JoinColumn(name = "user_id",updatable = false,insertable = false)
+  private UserEntity user;
+
+  @OneToOne
+  @JoinColumn(name = "product_id",updatable = false,insertable = false)
+  private ProductEntity product;
 
   private LocalDateTime createdDate;
   private LocalDateTime updatedDate;
-  private LocalDateTime deliveredDate;
 
   private Short deleted = 0;
 

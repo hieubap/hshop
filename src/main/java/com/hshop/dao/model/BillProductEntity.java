@@ -16,8 +16,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "bill_food")
-public class BillFoodEntity {
+@Table(name = "bill_product")
+public class BillProductEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -26,9 +26,19 @@ public class BillFoodEntity {
   @JoinColumn(name = "food_id")
   private ProductEntity food;
 
+  @OneToOne
+  @JoinColumn(name = "store_id")
+  private StoreEntity store;
+
+  @OneToOne
+  @JoinColumn(name = "buyer_id")
+  private UserEntity seller;
+
   @ManyToOne
   @JoinColumn(name = "bill_id")
   private BillEntity bill;
 
   private Integer number;
+
+  private Short deleted = 0;
 }

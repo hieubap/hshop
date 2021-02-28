@@ -1,26 +1,26 @@
 package com.hshop.service;
 
 
+import com.hshop.configuration.userdetail.UserDetailService;
 import com.hshop.dao.model.UserEntity;
 import com.hshop.dao.repository.UserRepository;
-import com.hshop.dto.LoginDTO;
 import com.hshop.dto.ResponseDTO;
 import com.hshop.dto.UserDTO;
 import com.hshop.exception.BaseException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
   @Autowired
   private UserRepository userRepository;
+  @Autowired
+  private UserDetailService userDetailService;
 
   @Override
-  public ResponseEntity<?> search(UserDTO userDTO) {
+  public ResponseDTO<?> search(UserDTO userDTO) {
     List<UserEntity> listEntities = userRepository.search(userDTO);
     List<UserDTO> listDto = new ArrayList<>();
 
@@ -35,53 +35,16 @@ public class UserServiceImpl implements UserService {
       listDto.add(dto);
     }
 
-    return new ResponseEntity<>(new ResponseDTO<>(listDto), HttpStatus.OK);
+    return new ResponseDTO<>(listDto);
   }
 
   @Override
-  public ResponseEntity<?> login(LoginDTO loginDTO) throws Exception {
-    if (loginDTO.getUsername() == null && loginDTO.getEmail() == null && loginDTO.getPhone() == null) {
-      throw new BaseException(400,"username or email or phone is null.",loginDTO);
-    }
-
-    UserEntity userEntity = userRepository.getUser(loginDTO);
-
-    if (!userEntity.getPassword().equals(loginDTO.getPassword())){
-      throw new BaseException(400,"password is not exactly. check password",null);
-    }
-
-    UserDTO userDTO = new UserDTO();
-    userDTO.setId(userEntity.getId());
-    userDTO.setName(userEntity.getName());
-    userDTO.setPhone(userEntity.getPhone());
-    userDTO.setEmail(userEntity.getEmail());
-    userDTO.setAddress(userEntity.getAddress());
-
-    return new ResponseEntity<>(new ResponseDTO<>(userDTO),HttpStatus.OK);
+  public ResponseDTO<?> detail() throws BaseException {
+    return new ResponseDTO<>(200,"detail ok",userDetailService.detail());
   }
 
   @Override
-  public ResponseEntity<?> register(UserDTO userDTO) {
-
-    UserEntity entity = new UserEntity();
-    entity.setName(userDTO.getName());
-    entity.setPhone(userDTO.getPhone());
-    entity.setAddress(userDTO.getAddress());
-    entity.setEmail(userDTO.getEmail());
-
-    userRepository.save(entity);
-
-    return new ResponseEntity<>(new ResponseDTO<>(entity),HttpStatus.OK);
-  }
-
-  @Override
-  public ResponseEntity<?> detail(String userDTO) {
-
-    return null;
-  }
-
-  @Override
-  public ResponseEntity<?> update(Long id, UserDTO userDTO) throws Exception {
+  public ResponseDTO<?> update(Long id, UserDTO userDTO) throws Exception {
     if (!userRepository.existsById(id)) {
       throw new BaseException(400,"id is not exist. check your id",id);
     }
@@ -93,19 +56,17 @@ public class UserServiceImpl implements UserService {
     entity.setEmail(userDTO.getEmail());
     userRepository.save(entity);
 
-    return new ResponseEntity<>(new ResponseDTO<>(entity),HttpStatus.OK);
+    return new ResponseDTO<>(entity);
   }
 
   @Override
-  public ResponseEntity<?> delete(Long id) throws Exception {
+  public ResponseDTO<?> delete(Long id) throws Exception {
     if (!userRepository.existsById(id)) {
       throw new BaseException(400,"id is not exist. check your id",id);
     }
 
     userRepository.deleteById(id);
-    ResponseDTO<?> responseDTO = new ResponseDTO(200,"delete id '" + id +"' successful",null);
-
-    return new ResponseEntity<>(responseDTO,HttpStatus.OK);
+    return new ResponseDTO<>(200,"delete ok",null);
   }
 
   public static UserDTO convertUserEntityToDTO(UserEntity entity){

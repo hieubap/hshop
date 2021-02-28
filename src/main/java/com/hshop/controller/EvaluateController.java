@@ -1,12 +1,9 @@
 package com.hshop.controller;
 
-import com.hshop.dto.ProductDTO;
+import com.hshop.dto.EvaluateDTO;
 import com.hshop.dto.ResponseDTO;
-import com.hshop.exception.BaseException;
-import com.hshop.service.ProductService;
+import com.hshop.service.EvaluateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,34 +14,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin
 @RestController
-@RequestMapping(value = "/product")
-public class ProductController {
-
+@RequestMapping(value = "/evaluate")
+public class EvaluateController {
   @Autowired
-  private ProductService foodService;
+  public EvaluateService service;
 
   @GetMapping
   public ResponseDTO<?> search(
       @RequestParam(defaultValue = "1") Integer page,
-      @RequestParam(defaultValue = "10") Integer size, ProductDTO foodDTO) {
-    return foodService.search(foodDTO,page,size);
+      @RequestParam(defaultValue = "10") Integer size,
+      EvaluateDTO data
+  ) throws Exception {
+    return service.search(data, page, size);
   }
 
+
   @PostMapping
-  public ResponseDTO<?> create(@RequestBody ProductDTO foodDTO) throws BaseException {
-    return foodService.create(foodDTO);
+  public ResponseDTO<?> create(@RequestBody EvaluateDTO evaluateDTO) throws Exception {
+      return service.create(evaluateDTO);
   }
 
   @PutMapping("/{id}")
-  public ResponseDTO<?> update(@RequestBody ProductDTO dto,@PathVariable(value = "id") Long id)
+  public ResponseDTO<?> update(@RequestBody EvaluateDTO evaluateDTO, @PathVariable Long id)
       throws Exception {
-    return foodService.update(id, dto);
+      return service.update(id, evaluateDTO);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseDTO<?> delete(@PathVariable(value = "id") Long id) throws Exception {
-    return foodService.delete(id);
+  public ResponseDTO<?> delete(@PathVariable Long id) throws Exception {
+    return service.delete(id);
   }
 }
