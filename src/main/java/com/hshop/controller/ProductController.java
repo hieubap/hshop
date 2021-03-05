@@ -10,7 +10,6 @@ import spring.library.common.controller.BaseController;
 @RestController
 @RequestMapping(value = "/product")
 public class ProductController extends BaseController<ProductDTO,ProductService> {
-
   @Autowired
   private ProductService foodService;
 
