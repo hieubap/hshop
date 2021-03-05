@@ -1,6 +1,5 @@
 package com.hshop.configuration.userdetail;
 
-import com.hshop.configuration.PropertiesConfiguration;
 import com.hshop.configuration.dto.RegisterDto;
 import com.hshop.dao.model.UserEntity;
 import com.hshop.dao.repository.UserRepository;
@@ -20,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import spring.library.common.config.PropertiesConfiguration;
+import spring.library.common.config.userdetail.UserDetail;
 
 @Service
 public class UserDetailService implements UserDetailsService {
@@ -34,12 +35,18 @@ public class UserDetailService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-    UserEntity userEntity = userRepository.findByUsername(s);
+    UserEntity entity = userRepository.findByUsername(s);
 
-    if (userEntity == null)
+    if (entity == null)
       throw new UsernameNotFoundException("username not found. check your username !");
 
-    return new UserDetail(userEntity);
+    UserDetail userDetail = new UserDetail();
+    userDetail.setUserId(entity.getId());
+    userDetail.setUsername(entity.getUsername());
+    userDetail.setPassword(entity.getPassword());
+    userDetail.addAuthority(entity.getRole().getName());
+
+    return userDetail;
   }
 
 //  public ResponseEntity<?> login(UsernameAndPasswordDto loginDTO) throws Exception {

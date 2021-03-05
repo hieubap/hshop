@@ -1,17 +1,16 @@
 package com.hshop.dto;
 
-import java.time.LocalDateTime;
-import javax.persistence.Column;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import spring.library.common.dto.BaseDTO;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class ProductDTO {
+public class ProductDTO extends BaseDTO {
   private Long id;
 
   private String title;
@@ -32,7 +31,4 @@ public class ProductDTO {
   private String img;
   private String distributor;
   private Integer per;
-
-  private LocalDateTime createdDate;
-  private LocalDateTime updatedDate;
 }

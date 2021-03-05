@@ -10,8 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import spring.library.common.dao.repository.BaseRepository;
 
-public interface ProductRepository extends JpaRepository<ProductEntity,Long> {
+public interface ProductRepository extends BaseRepository<ProductEntity,ProductDTO,Long> {
   @Query(
       value = "select f.* from product f "
           + " where true "
