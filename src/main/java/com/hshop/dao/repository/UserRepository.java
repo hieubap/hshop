@@ -6,8 +6,9 @@ import com.hshop.dto.UserDTO;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import spring.library.common.dao.repository.BaseRepository;
 
-public interface UserRepository extends JpaRepository<UserEntity,Long> {
+public interface UserRepository extends BaseRepository<UserEntity,UserDTO,Long> {
   @Query(
       value = " select u.* from user_ u "
           + " where true "

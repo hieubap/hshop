@@ -5,11 +5,12 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import spring.library.common.dto.BaseDTO;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDTO {
+public class UserDTO extends BaseDTO {
   private Long id;
 
   private String name;
@@ -18,6 +19,6 @@ public class UserDTO {
   private String address;
   private RoleType role;
 
-  private LocalDateTime createdTime;
-  private LocalDateTime updatedTime;
+  private String username;
+  private String password;
 }

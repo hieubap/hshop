@@ -13,36 +13,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import spring.library.common.controller.BaseController;
 
 @RestController
 @RequestMapping(value = "/evaluate")
-public class EvaluateController {
+public class EvaluateController extends BaseController<EvaluateDTO,EvaluateService> {
   @Autowired
   public EvaluateService service;
 
-  @GetMapping
-  public ResponseDTO<?> search(
-      @RequestParam(defaultValue = "1") Integer page,
-      @RequestParam(defaultValue = "10") Integer size,
-      EvaluateDTO data
-  ) throws Exception {
-    return service.search(data, page, size);
+  @Override
+  public EvaluateService getService() {
+    return service;
   }
 
-
-  @PostMapping
-  public ResponseDTO<?> create(@RequestBody EvaluateDTO evaluateDTO) throws Exception {
-      return service.create(evaluateDTO);
-  }
-
-  @PutMapping("/{id}")
-  public ResponseDTO<?> update(@RequestBody EvaluateDTO evaluateDTO, @PathVariable Long id)
-      throws Exception {
-      return service.update(id, evaluateDTO);
-  }
-
-  @DeleteMapping("/{id}")
-  public ResponseDTO<?> delete(@PathVariable Long id) throws Exception {
-    return service.delete(id);
-  }
+//  @GetMapping
+//  public ResponseDTO<?> search(
+//      @RequestParam(defaultValue = "1") Integer page,
+//      @RequestParam(defaultValue = "10") Integer size,
+//      EvaluateDTO data
+//  ) throws Exception {
+//    return service.search(data, page, size);
+//  }
+//
+//
+//  @PostMapping
+//  public ResponseDTO<?> create(@RequestBody EvaluateDTO evaluateDTO) throws Exception {
+//      return service.create(evaluateDTO);
+//  }
+//
+//  @PutMapping("/{id}")
+//  public ResponseDTO<?> update(@RequestBody EvaluateDTO evaluateDTO, @PathVariable Long id)
+//      throws Exception {
+//      return service.update(id, evaluateDTO);
+//  }
+//
+//  @DeleteMapping("/{id}")
+//  public ResponseDTO<?> delete(@PathVariable Long id) throws Exception {
+//    return service.delete(id);
+//  }
 }

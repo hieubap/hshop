@@ -13,37 +13,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import spring.library.common.controller.BaseController;
 
 @RestController
 @RequestMapping(value = "store")
-public class StoreController {
+public class StoreController extends BaseController<StoreDTO,StoreService> {
 
   @Autowired
   public StoreService service;
 
-  @GetMapping
-  public ResponseDTO<?> search(
-      @RequestParam(defaultValue = "1") Integer page,
-      @RequestParam(defaultValue = "10") Integer size,
-      StoreDTO data
-  ) throws Exception {
-    return service.search(data, page, size);
+  @Override
+  public StoreService getService() {
+    return service;
   }
 
-
-  @PostMapping
-  public ResponseDTO<?> create(@RequestBody StoreDTO storeDTO) throws Exception {
-    return service.create(storeDTO);
-  }
-
-  @PutMapping("/{id}")
-  public ResponseDTO<?> update(@RequestBody StoreDTO storeDTO, @PathVariable Long id)
-      throws Exception {
-    return service.update(id, storeDTO);
-  }
-
-  @DeleteMapping("/{id}")
-  public ResponseDTO<?> delete(@PathVariable Long id) throws Exception {
-    return service.delete(id);
-  }
+//  @GetMapping
+//  public ResponseDTO<?> search(
+//      @RequestParam(defaultValue = "1") Integer page,
+//      @RequestParam(defaultValue = "10") Integer size,
+//      StoreDTO data
+//  ) throws Exception {
+//    return service.search(data, page, size);
+//  }
+//
+//
+//  @PostMapping
+//  public ResponseDTO<?> create(@RequestBody StoreDTO storeDTO) throws Exception {
+//    return service.create(storeDTO);
+//  }
+//
+//  @PutMapping("/{id}")
+//  public ResponseDTO<?> update(@RequestBody StoreDTO storeDTO, @PathVariable Long id)
+//      throws Exception {
+//    return service.update(id, storeDTO);
+//  }
+//
+//  @DeleteMapping("/{id}")
+//  public ResponseDTO<?> delete(@PathVariable Long id) throws Exception {
+//    return service.delete(id);
+//  }
 }

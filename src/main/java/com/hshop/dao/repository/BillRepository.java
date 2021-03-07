@@ -4,28 +4,39 @@ package com.hshop.dao.repository;
 import com.hshop.dao.model.BillEntity;
 import com.hshop.dto.BillDTO;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import spring.library.common.dao.repository.BaseRepository;
 
-public interface BillRepository extends JpaRepository<BillEntity,Long> {
-  @Query(value = "select"
-      + "       year(b.created_date) as year, "
-      + "       month(b.created_date) as month, "
-      + "       day(b.created_date) as day, "
-      + "       count(day(b.created_date)) as soluong "
-      + " from bill b "
-      + " where b.deleted = 0"
-      + " and (b.user_id = :#{#userId} ) "
-      + " and (date(b.created_date) <= :#{#end} ) "
-      + " and (date(b.created_date) >= :#{#start} )"
-      + " group by year(b.created_date),month(b.created_date), day(b.created_date)", nativeQuery = true)
-  public List<Map<Long,Long>> dashboard(LocalDate start,LocalDate end,Long userId);
+public interface BillRepository extends BaseRepository<BillEntity,BillDTO,Long> {
+  @Query(value = "select * from ( select "
+      + "       year(created_at) as year, "
+      + "       month(created_at) as month, "
+      + "       day(created_at) as day, "
+      + "       count(day(created_at)) as soluong "
+      + " from bill "
+      + " where deleted = 0"
+      + " and (buyer_id = :#{#userId} or :#{#userId} is null) "
+      + " and (date(created_at) <= :#{#end} or :#{#end} is null) "
+      + " and (date(created_at) >= :#{#start} or :#{#start} is null)"
+      + " group by year(created_at),month(created_at), day(created_at) ) as tb ",
+      countQuery = "select * from ( select "
+          + "       year(created_at) as year, "
+          + "       month(created_at) as month, "
+          + "       day(created_at) as day, "
+          + "       count(day(created_at)) as soluong "
+          + " from bill "
+          + " where deleted = 0"
+          + " and (buyer_id = :#{#userId} or :#{#userId} is null) "
+          + " and (date(created_at) <= :#{#end} or :#{#end} is null) "
+          + " and (date(created_at) >= :#{#start} or :#{#start} is null)"
+          + " group by year(created_at),month(created_at), day(created_at) ) as tb "
+      ,nativeQuery = true)
+  Page<Map<Long,Long>> dashboard(LocalDate start,LocalDate end,Long userId,Pageable pageable);
 
   @Query(value = "select e from BillEntity e"
       + " where e.deleted = 0 "

@@ -15,13 +15,16 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
+import spring.library.common.dao.model.BaseEntity;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "evaluate")
-public class EvaluateEntity {
+@Where(clause = "deleted = 0")
+public class EvaluateEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -43,20 +46,4 @@ public class EvaluateEntity {
   @OneToOne
   @JoinColumn(name = "product_id",updatable = false,insertable = false)
   private ProductEntity product;
-
-  private LocalDateTime createdDate;
-  private LocalDateTime updatedDate;
-
-  private Short deleted = 0;
-
-  @PrePersist
-  void prePersist() {
-    createdDate = LocalDateTime.now();
-    updatedDate = createdDate;
-  }
-
-  @PreUpdate
-  void preUpdate() {
-    updatedDate = LocalDateTime.now();
-  }
 }

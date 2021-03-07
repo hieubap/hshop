@@ -11,8 +11,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import spring.library.common.dao.repository.BaseRepository;
 
-public interface EvaluateRepository extends JpaRepository<EvaluateEntity,Long> {
+public interface EvaluateRepository extends BaseRepository<EvaluateEntity,EvaluateDTO,Long> {
   @Query(value = "select e from EvaluateEntity e"
       + " where e.deleted = 0 "
       + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) "

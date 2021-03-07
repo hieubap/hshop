@@ -4,11 +4,12 @@ import java.sql.Time;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import spring.library.common.dto.BaseDTO;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class StoreDTO {
+public class StoreDTO extends BaseDTO {
   private Long id;
   private String name;
   private String address;
@@ -17,6 +18,6 @@ public class StoreDTO {
   private Time timeStart;
   private Time timeEnd;
   private Long ownerId;
-  private UserDTO owner;
+  private Object owner;
 
 }

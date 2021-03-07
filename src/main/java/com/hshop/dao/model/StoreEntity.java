@@ -19,14 +19,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.checkerframework.checker.formatter.qual.Format;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
+import spring.library.common.dao.model.BaseEntity;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "store")
-public class StoreEntity {
+@Where(clause = "deleted = 0")
+public class StoreEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -48,20 +51,4 @@ public class StoreEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner_id",updatable = false,insertable = false)
   private UserEntity owner;
-
-  private LocalDateTime createdDate;
-  private LocalDateTime updatedDate;
-
-  private Short deleted = 0;
-
-  @PrePersist
-  void prePersist() {
-    createdDate = LocalDateTime.now();
-    updatedDate = createdDate;
-  }
-
-  @PreUpdate
-  void preUpdate() {
-    updatedDate = LocalDateTime.now();
-  }
 }

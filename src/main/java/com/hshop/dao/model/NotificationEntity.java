@@ -14,13 +14,16 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
+import spring.library.common.dao.model.BaseEntity;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "notification")
-public class NotificationEntity {
+@Where(clause = "deleted = 0")
+public class NotificationEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -32,26 +35,10 @@ public class NotificationEntity {
    */
   private Short isRead = 1;
 
-  @Column(name = "user_id")
-  private Long userId;
+  @Column(name = "owner_id")
+  private Long ownerId;
 
   @ManyToOne
-  @JoinColumn(name = "user_id",updatable = false,insertable = false)
-  private UserEntity user;
-
-  private LocalDateTime createdDate;
-  private LocalDateTime updatedDate;
-
-  private Short deleted = 0;
-
-  @PrePersist
-  void prePersist() {
-    createdDate = LocalDateTime.now();
-    updatedDate = createdDate;
-  }
-
-  @PreUpdate
-  void preUpdate() {
-    updatedDate = LocalDateTime.now();
-  }
+  @JoinColumn(name = "owner_id",updatable = false,insertable = false)
+  private UserEntity owner;
 }

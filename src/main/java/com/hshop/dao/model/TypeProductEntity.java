@@ -14,34 +14,20 @@ import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import spring.library.common.dao.model.BaseEntity;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "type_product")
-public class TypeProductEntity {
+@Where(clause = "deleted = 0")
+public class TypeProductEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String name;
-
-  private LocalDateTime createdDate;
-  private LocalDateTime updatedDate;
-
-  @Column(name = "deleted",nullable = false)
-  private Short deleted = 0;
-
-  @PrePersist
-  void prePersist() {
-    createdDate = LocalDateTime.now();
-    updatedDate = createdDate;
-  }
-
-  @PreUpdate
-  void preUpdate() {
-    updatedDate = LocalDateTime.now();
-  }
 }

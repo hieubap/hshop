@@ -8,8 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import spring.library.common.dao.repository.BaseRepository;
 
-public interface TypeProductRepository extends JpaRepository<TypeProductEntity,Long> {
+public interface TypeProductRepository extends BaseRepository<TypeProductEntity,TypeProductDTO,Long> {
     @Query(value = "select e from TypeProductEntity e"
         + " where e.deleted = 0 "
         + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) "

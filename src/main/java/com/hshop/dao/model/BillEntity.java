@@ -18,13 +18,16 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
+import spring.library.common.dao.model.BaseEntity;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Where(clause = "deleted = 0")
 @Entity
 @Table(name = "bill")
-public class BillEntity {
+public class BillEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -35,23 +38,9 @@ public class BillEntity {
   private List<BillProductEntity> listFoods;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "buyer_id")
   private UserEntity buyer;
 
-  private LocalDateTime createdDate;
-  private LocalDateTime updatedDate;
   private LocalDateTime deliveredDate;
 
-  private Short deleted = 0;
-
-  @PrePersist
-  void prePersist() {
-    createdDate = LocalDateTime.now();
-    updatedDate = createdDate;
-  }
-
-  @PreUpdate
-  void preUpdate() {
-    updatedDate = LocalDateTime.now();
-  }
 }

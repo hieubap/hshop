@@ -53,20 +53,4 @@ public class ProductServiceImpl extends AbstractBaseService<ProductEntity,Produc
     super.afterSave(entity, dto);
     dto.setPer(100 - (int) ((double)entity.getNewPrice()*100 / entity.getOldPrice()));
   }
-
-  //  @Override
-//  public ResponseDTO<?> update(Long id, ProductDTO dto) throws Exception {
-//    if (id == null){
-//      throw new BaseException(400,"id is null. enter id",dto);
-//    }
-//    if (!productRepository.existsById(id)){
-//      throw new BaseException(400,"id is not exist. check your id",dto);
-//    }
-//    ProductEntity entity = Converter.convertProductToEntity(dto);
-//    entity.setId(id);
-//
-//    productRepository.save(entity);
-//
-//    return new ResponseDTO<>(200,"update ok",entity);
-//  }
 }

@@ -5,22 +5,20 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import spring.library.common.dto.BaseDTO;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class EvaluateDTO {
+public class EvaluateDTO extends BaseDTO {
   private Long id;
 
   private Long userId;
-  private UserDTO user;
+  private Object user;
 
   private Long productId;
-  private ProductDTO product;
+  private Object product;
 
   private String content;
   private Short star;
-
-  private LocalDateTime createdDate;
-  private LocalDateTime updatedDate;
 }

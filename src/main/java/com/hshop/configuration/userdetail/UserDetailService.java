@@ -101,31 +101,31 @@ public class UserDetailService implements UserDetailsService {
     return new ResponseDTO<>(HttpStatus.OK.value(),"register successful",entity);
   }
 
-  public UserDTO detail() throws BaseException {
-    UserDTO dto = new UserDTO();
-    UserEntity entity = getUsernameFromRequest();
-    if (entity == null)
-      throw new BaseException(200,"Unauthorization",null);
-
-    dto.setId(entity.getId());
-    dto.setName(entity.getName());
-    dto.setPhone(entity.getPhone());
-    dto.setEmail(entity.getEmail());
-    dto.setAddress(entity.getAddress());
-    dto.setRole(entity.getRole());
-    dto.setCreatedTime(entity.getCreatedDate());
-    dto.setUpdatedTime(entity.getUpdatedDate());
-
-    return dto;
-  }
+//  public UserDTO detail() throws BaseException {
+//    UserDTO dto = new UserDTO();
+//    UserEntity entity = getUsernameFromRequest();
+//    if (entity == null)
+//      throw new BaseException(200,"Unauthorization",null);
+//
+//    dto.setId(entity.getId());
+//    dto.setName(entity.getName());
+//    dto.setPhone(entity.getPhone());
+//    dto.setEmail(entity.getEmail());
+//    dto.setAddress(entity.getAddress());
+//    dto.setRole(entity.getRole());
+//    dto.setCreatedTime(entity.getCreatedDate());
+//    dto.setUpdatedTime(entity.getUpdatedDate());
+//
+//    return dto;
+//  }
 
   public UserEntity getUsernameFromRequest() {
     HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     String token = request.getHeader("Authorization").replace(propertiesConfiguration.getTokenPrefix(), "");
 
-    String username = Jwts.parser()
+    String username = (String) Jwts.parser()
         .setSigningKey(secretKey)
-        .parseClaimsJws(token).getBody().getSubject();
+        .parseClaimsJws(token).getBody().get("username");
 
     return userRepository.findByUsername(username);
   }
