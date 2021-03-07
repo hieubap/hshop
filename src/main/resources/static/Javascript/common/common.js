@@ -1,5 +1,5 @@
 const domainApi = 'http://93.188.162.82:8081';
-const domain = 'http://93.188.162.82:8081'
+const domain = 'http://127.0.0.1:5500/'
 const url_giohang = domain+'/giohang.html';
 const url_management = domain+'/management.html';
 const url_home = domain+'/index.html';
@@ -16,7 +16,7 @@ const url_order = domainApi+"/bill/create";
 
 const url_bill = domainApi+"/bill/search?name=";
 const url_bill_delete = domainApi+"/bill/delete?id=";
-const url_bill_dashboard = domainApi+"/bill/dashboard?from=2021-02-01&to=2021-03-01";
+const url_bill_dashboard = domainApi+"/bill/dashboard?from=2021-01-01&to=2021-03-01";
 
 window.onload = function load(){
   handleForms();

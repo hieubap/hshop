@@ -50,11 +50,4 @@ public interface ProductRepository extends BaseRepository<ProductEntity,ProductD
   )
   Page<ProductEntity> search(ProductDTO dto, Pageable pageable);
 
-  @Override
-  @Transactional
-  @Modifying
-  @Query(value = "update ProductEntity e set e.deleted = 1 "
-      + " where e.id = ?#{#id} ")
-  void deleteById(Long id);
-
 }
