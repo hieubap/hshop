@@ -1,5 +1,6 @@
 package com.hshop.dao.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformers;
 import org.hibernate.annotations.Where;
 import spring.library.common.dao.model.BaseEntity;
 
@@ -42,11 +44,14 @@ public class ProductEntity extends BaseEntity {
   private String img;
   private String distributor;
 
+  @Column(name = "store_id")
+  private Long storeId;
+
   @OneToOne
   @JoinColumn(name = "seller_id")
   private UserEntity seller;
 
   @OneToOne
-  @JoinColumn(name = "store_id")
+  @JoinColumn(name = "store_id",updatable = false,insertable = false)
   private StoreEntity store;
 }

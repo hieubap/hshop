@@ -2,8 +2,10 @@ package com.hshop.dao.repository;
 
 
 import com.hshop.dao.model.BillEntity;
+import com.hshop.dao.model.OrderEntity;
 import com.hshop.dto.BillDTO;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,18 +40,29 @@ public interface BillRepository extends BaseRepository<BillEntity,BillDTO,Long> 
       ,nativeQuery = true)
   Page<Map<Long,Long>> dashboard(LocalDate start,LocalDate end,Long userId,Pageable pageable);
 
+  @Override
   @Query(value = "select e from BillEntity e"
+      + " left join e.buyer buyer"
       + " where e.deleted = 0 "
-      + " and (e.buyer.id = :#{#userId}) "
+      + " and (buyer.id = :#{#dto.buyerId} or :#{#dto.buyerId} is null )"
       + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) "
-      + " and (e.status = :#{#dto.status} or :#{#dto.status} is null)"
+      + " and (e.storeId = :#{#dto.storeId} or :#{#dto.storeId} is null) "
+      + " and (e.status = :#{#dto.statusValue} or :#{#dto.statusValue} is null)"
 
       , countQuery = "select count(e) from BillEntity e"
+      + " left join e.buyer buyer"
       + " where e.deleted = 0 "
-      + " and (e.buyer.id = :#{#userId}) "
+      + " and (buyer.id = :#{#dto.buyerId} or :#{#dto.buyerId} is null )"
       + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) "
-      + " and (e.status = :#{#dto.status} or :#{#dto.status} is null)")
-  Page<BillEntity> search(BillDTO dto, Pageable page,Long userId);
+      + " and (e.storeId = :#{#dto.storeId} or :#{#dto.storeId} is null) "
+      + " and (e.status = :#{#dto.statusValue} or :#{#dto.statusValue} is null)")
+  Page<BillEntity> search(BillDTO dto, Pageable page);
+
+  @Query("select e from BillEntity e"
+      + " where e.deleted = 0 "
+      + "and (e.storeId = :#{#storeId})"
+      + "and e.status = 1 ")
+  Page<BillEntity> getOrder(Long storeId, Pageable pageable);
 
   @Override
   @Transactional
@@ -57,4 +70,9 @@ public interface BillRepository extends BaseRepository<BillEntity,BillDTO,Long> 
   @Query(value = "update BillEntity e set e.deleted = 1 "
       + " where e.id = ?#{#id} ")
   void deleteById(Long id);
+
+  @Query("select count(e) from BillEntity e"
+      + " where e.deleted = 0 "
+      + "and day(e.createdAt) = day(:#{#date})")
+  Integer numberBillOnDay(LocalDate date);
 }

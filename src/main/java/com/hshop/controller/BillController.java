@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,27 +32,21 @@ public class BillController extends BaseController<BillDTO,BillService> {
     return billService;
   }
 
-//  @GetMapping
-//  public ResponseDTO<?> search(BillDTO billDTO,
-//      @RequestParam(defaultValue = "1") Integer page,
-//      @RequestParam(defaultValue = "10") Integer size){
-//    return billService.search(billDTO,page,size);
-//  }
-
   @GetMapping(value = "/dashboard")
   public ResponseEntity<?> dashboard(
       @RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate from,
       @RequestParam(value = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate to,
       @PageableDefault(size = 200, sort = "year", direction = Sort.Direction.DESC) Pageable pageable){
-    return response(billService.dashboard(from, to,pageable));
+    return response(billService.chart(from, to,pageable));
   }
 
-//  @PostMapping
-//  public ResponseDTO<?> order(@RequestBody OrderDTO orderDTO) throws Exception {
-//    return billService.create(orderDTO);
-//  }
+  @GetMapping(value = "/get-order")
+  public ResponseEntity<?> order(Long storeId,
+      @PageableDefault(size = 200, sort = "id", direction = Direction.DESC) Pageable pageable){
+    return response(billService.getOrder(storeId,pageable));
+  }
 
-  @PutMapping(value = "/store/confirm/{id}")
+  @PutMapping(value = "/confirm/{id}")
   public ResponseEntity<?> storeConfirm(@PathVariable(value = "id") Long id){
     return response(billService.storeConfirm(id));
   }
@@ -65,9 +60,4 @@ public class BillController extends BaseController<BillDTO,BillService> {
   public ResponseEntity<?> deliveredBill(@PathVariable(value = "id") Long id){
     return response(billService.delivered(id));
   }
-
-//  @DeleteMapping("/{id}")
-//  public ResponseDTO<?> deleteBill(@PathVariable(value = "id") Long id) throws Exception {
-//    return billService.delete(id);
-//  }
 }

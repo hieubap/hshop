@@ -2,14 +2,12 @@ package com.hshop.service;
 
 import com.google.common.base.Strings;
 import com.hshop.dao.model.NotificationEntity;
+import com.hshop.dao.repository.BillRepository;
 import com.hshop.dao.repository.NotificationRepository;
 import com.hshop.dto.NotificationDTO;
-import com.hshop.dto.ResponseDTO;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import spring.library.common.exception.BaseException;
 import spring.library.common.service.AbstractBaseService;
@@ -19,6 +17,9 @@ public class NotificationServiceImpl extends
     AbstractBaseService<NotificationEntity,NotificationDTO,NotificationRepository> implements NotificationService {
   @Autowired
   private NotificationRepository notificationRepository;
+
+  @Autowired
+  private BillRepository billRepository;
 
   @Override
   protected NotificationRepository getRepository() {
@@ -32,71 +33,21 @@ public class NotificationServiceImpl extends
         dto.getOwnerId() == null){
       throw new BaseException(400,"content or ownerId is null or empty",null);
     }
+    entity.setIsRead((short) 0);
   }
 
-//  @Override
-//  public ResponseDTO<?> create(NotificationDTO dto) throws BaseException {
-//
-//    NotificationEntity entity = new NotificationEntity();
-//    entity.setContent(dto.getContent());
-//    entity.setUserId(dto.getOwnerId());
-//
-//    notificationRepository.save(entity);
-//
-//    dto.setId(entity.getId());
-//    dto.setIsRead(entity.getIsRead());
-//    dto.setCreatedDate(entity.getCreatedDate());
-//
-//    return new ResponseDTO<>(200,"create ok" , dto);
-//  }
+  @Scheduled(cron = "0,30 * * * * *")
+  public void updateOnDay(){
+    NotificationEntity notificationEntity = new NotificationEntity();
+    notificationEntity.setOwnerId((long)2);
+    notificationEntity.setCreatedBy((long) 0);
+    notificationEntity.setUpdatedBy((long) 0);
+    StringBuilder str = new StringBuilder();
+    str.append("hôm nay có ")
+        .append(billRepository.numberBillOnDay(LocalDate.now()))
+        .append(" đơn trong ngày");
+    notificationEntity.setContent(str.toString());
+    notificationRepository.save(notificationEntity);
 
-//  @Override
-//  public ResponseDTO<?> update(Long id, NotificationDTO dto) throws BaseException {
-//    if (!notificationRepository.existsById(id)){
-//      throw new BaseException(400,"id is not exist",null);
-//    }
-//    if (Strings.isNullOrEmpty(dto.getContent()) &&
-//        dto.getOwnerId() == null){
-//      throw new BaseException(400,"content or ownerId is null or empty",null);
-//    }
-//    NotificationEntity entity = notificationRepository.findById(id).get();
-//    entity.setContent(dto.getContent());
-//    entity.setIsRead((short) 0);
-//    entity.setUserId(dto.getOwnerId());
-//
-//    notificationRepository.save(entity);
-//
-//    dto.setIsRead((short)0);
-//    return new ResponseDTO<>(200,"update ok" , dto);
-//  }
-
-//  @Override
-//  public ResponseDTO<?> delete(Long id) throws BaseException {
-//    if (!notificationRepository.existsById(id)){
-//      throw new BaseException(400,"id is not exist",null);
-//    }
-//
-//    notificationRepository.deleteById(id);
-//
-//    return new ResponseDTO<>(200,"delete ok" , null);
-//  }
-
-
-//  @Override
-//  public Page<NotificationDTO> search(NotificationDTO dto, Pageable pageable) {
-//    Page<NotificationEntity> list = notificationRepository.search(dto, PageRequest);
-//
-//    return new ResponseDTO<>(200, "find successful", list.toList(), list.toList().size(),
-//        (int) list.getTotalElements());
-//  }
-
-//  @Override
-//  public ResponseDTO<?> search(NotificationDTO dto, Integer page, Integer size) {
-//    Sort sort = Sort.by(Sort.Direction.ASC,"id");
-//    Page<NotificationEntity> list = notificationRepository.search(dto, PageRequest
-//        .of(page-1,size,sort));
-//
-//    return new ResponseDTO<>(200, "find successful", list.toList(), list.toList().size(),
-//        (int) list.getTotalElements());
-//  }
+  }
 }

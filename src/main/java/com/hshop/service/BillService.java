@@ -20,5 +20,6 @@ public interface BillService extends BaseService<BillDTO> {
   BillDTO storeConfirm(Long id);
   BillDTO cancel(Long id);
   BillDTO delivered(Long id);
-  Page<Map<Long,Long>> dashboard(LocalDate start,LocalDate end, Pageable pageable);
+  Page<Map<Long,Long>> chart(LocalDate start,LocalDate end, Pageable pageable);
+  Page<BillDTO> getOrder(Long storeId,Pageable pageable);
 }

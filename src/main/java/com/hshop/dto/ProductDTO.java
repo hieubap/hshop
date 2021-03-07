@@ -31,4 +31,5 @@ public class ProductDTO extends BaseDTO {
   private String img;
   private String distributor;
   private Integer per;
+  private Long storeId;
 }

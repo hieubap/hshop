@@ -1,9 +1,9 @@
 package com.hshop.dao.model;
 
-import com.hshop.enums.BillStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,8 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,14 +31,21 @@ public class BillEntity extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private BillStatus status;
+  private Short status;
 
   @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-  private List<BillProductEntity> listFoods;
+  private List<OrderEntity> listFoods;
 
   @ManyToOne
   @JoinColumn(name = "buyer_id")
   private UserEntity buyer;
+
+  @OneToOne
+  @JoinColumn(name = "store_id",insertable = false,updatable = false)
+  private StoreEntity store;
+
+  @Column(name = "store_id")
+  private Long storeId;
 
   private LocalDateTime deliveredDate;
 

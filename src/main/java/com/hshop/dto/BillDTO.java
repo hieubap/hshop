@@ -1,5 +1,6 @@
 package com.hshop.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.time.LocalDateTime;
@@ -17,16 +18,22 @@ public class BillDTO extends BaseDTO {
   private Long id;
 
   private List<Bill_Product> foods;
+
+  @JsonInclude(value = Include.NON_NULL)
   private Long buyerId;
-  private UserDTO user;
+
+  private UserDTO buyer;
 
   private Long total;
+
+  @JsonIgnore
+  private Short statusValue;
+
   private String status;
 
   private LocalDateTime date;
 
-  @JsonInclude(value = Include.NON_NULL)
-  private Long userId;
+  private Long storeId;
 
   @JsonInclude(value = Include.NON_NULL)
   private Map<Long,Integer> listFoodsOrder;
