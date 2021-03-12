@@ -1,188 +1,189 @@
 package com.hshop.service;
 
+import com.hshop.configuration.userdetail.UserDetailService;
 import com.hshop.dao.model.BillEntity;
-import com.hshop.dao.model.BillFoodEntity;
+import com.hshop.dao.model.OrderEntity;
 import com.hshop.dao.model.UserEntity;
-import com.hshop.dao.repository.BillFoodRepository;
 import com.hshop.dao.repository.BillRepository;
+import com.hshop.dao.repository.OrderRepository;
 import com.hshop.dao.repository.ProductRepository;
+import com.hshop.dao.repository.StoreRepository;
 import com.hshop.dao.repository.UserRepository;
 import com.hshop.dto.BillDTO;
-import com.hshop.dto.BillDTO.Bill_Food;
-import com.hshop.dto.ProductDTO;
-import com.hshop.dto.OrderDTO;
-import com.hshop.dto.ResponseDTO;
+import com.hshop.dto.BillDTO.Bill_Product;
+import com.hshop.dto.UserDTO;
 import com.hshop.enums.BillStatus;
-import com.hshop.exception.BaseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import spring.library.common.exception.BaseException;
+import spring.library.common.exception.DataException;
+import spring.library.common.service.AbstractBaseService;
 
 @Service
-public class BillServiceImpl implements BillService{
+public class BillServiceImpl
+    extends AbstractBaseService<BillEntity,BillDTO,BillRepository> implements BillService{
   @Autowired
   private BillRepository billRepository;
 
   @Autowired
-  private BillFoodRepository billFoodRepository;
+  private UserDetailService userDetailService;
+
+  @Autowired
+  private ProductRepository productRepository;
+
+  @Autowired
+  private ProductServiceImpl productService;
 
   @Autowired
   private UserRepository userRepository;
 
   @Autowired
-  private ProductRepository foodRepository;
+  private UserServiceImpl userService;
+
+  @Autowired
+  private OrderRepository orderRepository;
+
+  @Autowired
+  private StoreRepository storeRepository;
 
   @Override
-  public ResponseEntity<?> search() {
-    List<BillDTO> list = new ArrayList<>();
-    List<BillEntity> entities = billRepository.findAll();
-
-    for (BillEntity bill : entities){
-      list.add(convertBillEntityToDTO(bill));
-    }
-
-    return new ResponseEntity<>(new ResponseDTO<>(list), HttpStatus.OK);
+  protected BillRepository getRepository() {
+    return billRepository;
   }
 
   @Override
-  public ResponseEntity<?> create(OrderDTO dto) throws Exception {
+  protected void specificMapToDTO(BillEntity entity, BillDTO dto) {
+    super.specificMapToDTO(entity, dto);
+    UserDTO userDTO = userService.mapToDTO(entity.getBuyer());
+    dto.setBuyer(userDTO);
+    List<Bill_Product> list = new ArrayList<>();
+    long sum = 0;
+    for (OrderEntity billProduct : entity.getListFoods()){
+      Bill_Product bp = new Bill_Product();
+      bp.setFood(productService.mapToDTO(billProduct.getFood()));
+      bp.setNumber(billProduct.getNumber());
+      bp.setPrice(billProduct.getFood().getNewPrice());
+
+      list.add(bp);
+      sum += billProduct.getFood().getNewPrice()*billProduct.getNumber();
+    }
+    dto.setStatus(BillStatus.getString(entity.getStatus()));
+    dto.setFoods(list);
+    dto.setTotal(sum);
+  }
+
+  @Override
+  protected void specificMapToEntity(BillDTO dto, BillEntity entity) {
+    super.specificMapToEntity(dto, entity);
+    if (dto.getBuyerId() == null || !userRepository.existsById(dto.getBuyerId())){
+      throw new DataException.NullOrEmpty("buyerId");
+    }
+    if (dto.getStoreId() == null || !storeRepository.existsById(dto.getStoreId())){
+      throw new DataException.NullOrEmpty("storeId");
+    }
     if (dto.getListFoodsOrder() == null){
-      throw new BaseException(400,"listFoodsOrder is null",null);
+      throw new DataException.NullOrEmpty("listFoodsOrder");
     }
-    if (dto.getUserId() == null){
-      throw new BaseException(400,"userId is null",null);
-    }
-    for (Map.Entry<Long,Integer> id : dto.getListFoodsOrder().entrySet()){
-      if (!foodRepository.existsById(id.getKey())){
-        throw new BaseException(400,"id food is not exist",id);
+    UserEntity buyer = userRepository.findById(dto.getBuyerId()).get();
+    entity.setBuyer(buyer);
+    entity.setStatus(BillStatus.WAIT_STORE_CONFIRM.getValue());
+  }
+
+  @Override
+  protected void beforeSave(BillEntity entity, BillDTO dto) {
+    super.beforeSave(entity, dto);
+    for (Map.Entry<Long,Integer> order : dto.getListFoodsOrder().entrySet()){
+      if (!productRepository.existsById(order.getKey())){
+        throw new DataException.NullOrEmpty("productId");
+      }
+      if (productRepository.findById(order.getKey()).get().getStore().getId()
+      .equals(dto.getStoreId())){
+        throw new BaseException("id " + order.getKey() + " is not on store "
+            + productRepository.findById(order.getKey()).get().getStore().getName());
       }
     }
+  }
 
-    BillEntity billEntity = new BillEntity();
-    UserEntity userEntity = userRepository.findById(dto.getUserId()).get();
+  @Override
+  protected void afterSave(BillEntity entity, BillDTO dto) {
+    super.afterSave(entity, dto);
+    List<OrderEntity> orderEntities = new ArrayList<>();
 
-    billEntity.setUser(userEntity);
-    billEntity.setStatus(BillStatus.WAIT_STORE_CONFIRM);
+    for (Map.Entry<Long,Integer> order : dto.getListFoodsOrder().entrySet()){
+      if (!productRepository.existsById(order.getKey())){
+        throw new DataException.NullOrEmpty("productId");
+      }
 
-    billRepository.save(billEntity);
+      OrderEntity billProduct = new OrderEntity();
 
-    List<BillFoodEntity> billFoodEntities = new ArrayList<>();
-    for (Map.Entry<Long,Integer> billFood : dto.getListFoodsOrder().entrySet()){
-      BillFoodEntity billFoodEntity = new BillFoodEntity();
-
-      billFoodEntity.setFood(foodRepository.findById(billFood.getKey()).get());
-      billFoodEntity.setBill(billEntity);
-      billFoodEntity.setNumber(billFood.getValue());
-
-      billFoodRepository.save(billFoodEntity);
-      billFoodEntities.add(billFoodEntity);
+      billProduct.setProductId(order.getKey());
+      billProduct.setFood(productRepository.findById(order.getKey()).get());
+      billProduct.setBillId(entity.getId());
+      billProduct.setNumber(order.getValue());
+      orderEntities.add(billProduct);
     }
-    billEntity.setListFoods(billFoodEntities);
-
-    return new ResponseEntity<>(new ResponseDTO<>(convertBillEntityToDTO(billEntity)), HttpStatus.OK);
+    orderRepository.saveAll(orderEntities);
+    entity.setListFoods(orderEntities);
   }
 
   @Override
-  public ResponseEntity<?> update(Long id, OrderDTO dto) throws Exception {
-    return null;
-  }
-
-  @Override
-  public ResponseEntity<?> delete(Long id) throws Exception {
-    if (!billRepository.existsById(id)) {
-      throw new BaseException(400,"id bill is not exist",id);
-    }
-    billRepository.deleteById(id);
-    return new ResponseEntity<>(new ResponseDTO<>("delete successful"), HttpStatus.OK);
-  }
-
-  @Override
-  public ResponseEntity<?> storeConfirm(Long id) throws Exception {
+  public BillDTO storeConfirm(Long id){
     BillEntity billEntity = billRepository.findById(id).get();
 
-    if (billEntity.getStatus() == BillStatus.CANCEL){
-      throw new BaseException(400,"bill just have cancel",convertBillEntityToDTO(billEntity));
+    if (billEntity.getStatus().equals(BillStatus.CANCEL.getValue())){
+      throw new BaseException(400,"bill just have cancel",mapToDTO(billEntity));
     }
-    if (billEntity.getStatus() == BillStatus.DELIVERED){
-      throw new BaseException(400,"bill just have delivered",convertBillEntityToDTO(billEntity));
+    if (billEntity.getStatus().equals(BillStatus.DELIVERED.getValue())){
+      throw new BaseException(400,"bill just have delivered",mapToDTO(billEntity));
     }
-    if (billEntity.getStatus() == BillStatus.STORE_CONFIRM){
-      throw new BaseException(400,"bill just have confirm",convertBillEntityToDTO(billEntity));
+    if (billEntity.getStatus().equals(BillStatus.STORE_CONFIRM.getValue())){
+      throw new BaseException(400,"bill just have confirm",mapToDTO(billEntity));
     }
 
-    billEntity.setStatus(BillStatus.STORE_CONFIRM);
+    billEntity.setStatus(BillStatus.STORE_CONFIRM.getValue());
 
     billRepository.save(billEntity);
 
-    return new ResponseEntity<>(new ResponseDTO<>(convertBillEntityToDTO(billEntity)), HttpStatus.OK);
+    return mapToDTO(billEntity);
   }
 
   @Override
-  public ResponseEntity<?> cancel(Long id) throws Exception {
+  public BillDTO cancel(Long id) {
     BillEntity billEntity = billRepository.findById(id).get();
-    billEntity.setStatus(BillStatus.CANCEL);
+    billEntity.setStatus(BillStatus.CANCEL.getValue());
 
     billRepository.save(billEntity);
 
-    return new ResponseEntity<>(new ResponseDTO<>(convertBillEntityToDTO(billEntity)), HttpStatus.OK);
+    return mapToDTO(billEntity);
   }
 
   @Override
-  public ResponseEntity<?> delivered(Long id) throws Exception {
+  public BillDTO delivered(Long id) {
     BillEntity billEntity = billRepository.findById(id).get();
-    billEntity.setStatus(BillStatus.DELIVERED);
+    billEntity.setStatus(BillStatus.DELIVERED.getValue());
 
     billRepository.save(billEntity);
 
-    return new ResponseEntity<>(new ResponseDTO<>(convertBillEntityToDTO(billEntity)), HttpStatus.OK);
+    return mapToDTO(billEntity);
   }
 
   @Override
-  public ResponseEntity<?> dashboard(LocalDate start, LocalDate end) {
-    List<Map<Long,Long>> data = billRepository.dashboard(start, end);
+  public Page<Map<Long,Long>> chart(LocalDate start, LocalDate end,
+      Pageable pageable) {
+    UserEntity userEntity = userDetailService.getUsernameFromRequest();
+    Page<Map<Long,Long>> data = billRepository.dashboard(start, end,userEntity.getId(),pageable);
 
-    return new ResponseEntity<>(new ResponseDTO<>(data), HttpStatus.OK);
+    return data;
   }
 
-  public static BillDTO convertBillEntityToDTO(BillEntity entity){
-    BillDTO dto = new BillDTO();
-    dto.setId(entity.getId());
-    long sum = 0;
-
-    List<Bill_Food> listBillFood = new ArrayList<>();
-    for (BillFoodEntity billFoodEntity : entity.getListFoods()){
-      Bill_Food billFood = convertBillFoodEntityToDTO(billFoodEntity);
-
-      sum += billFood.getPrice();
-
-      listBillFood.add(billFood);
-    }
-
-    dto.setDate(entity.getCreatedDate());
-    dto.setFoods(listBillFood);
-    dto.setStatus(entity.getStatus().getString());
-    dto.setUser(UserServiceImpl.convertUserEntityToDTO(entity.getUser()));
-    dto.setTotal(sum);
-
-    return dto;
-  }
-  public static Bill_Food convertBillFoodEntityToDTO(BillFoodEntity entity){
-    Bill_Food billFood = new Bill_Food();
-
-    ProductDTO foodDTO = new ProductDTO();
-    foodDTO.setId(entity.getFood().getId());
-    foodDTO.setName(entity.getFood().getName());
-    foodDTO.setNewPrice(entity.getFood().getNewPrice());
-    billFood.setFood(foodDTO);
-
-    billFood.setNumber(entity.getNumber());
-    billFood.setPrice(entity.getNumber()*entity.getFood().getNewPrice());
-
-    return billFood;
+  @Override
+  public Page<BillDTO> getOrder(Long storeId, Pageable pageable) {
+    return billRepository.getOrder(storeId,pageable).map(this::mapToDTO);
   }
 }

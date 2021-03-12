@@ -1,7 +1,6 @@
 package com.hshop.dto;
 
-import com.hshop.enums.RoleType;
-import java.time.LocalDateTime;
+import java.sql.Time;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,15 +9,15 @@ import spring.library.common.dto.BaseDTO;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDTO extends BaseDTO {
+public class StoreDTO extends BaseDTO {
   private Long id;
-
   private String name;
-  private String phone;
-  private String email;
   private String address;
-  private RoleType role;
+  private String email;
+  private String phone;
+  private Time timeStart;
+  private Time timeEnd;
+  private Long ownerId;
+  private Object owner;
 
-  private String username;
-  private String password;
 }

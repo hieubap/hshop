@@ -1,24 +1,20 @@
-package com.hshop.dto;
+package com.hshop.configuration.dto;
 
 import com.hshop.enums.RoleType;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spring.library.common.dto.BaseDTO;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDTO extends BaseDTO {
-  private Long id;
+public class RegisterDto {
+  private String username;
+  private String password;
 
   private String name;
   private String phone;
-  private String email;
   private String address;
+  private String email;
   private RoleType role;
-
-  private String username;
-  private String password;
 }

@@ -16,7 +16,7 @@ public enum BillStatus {
     return status;
   }
 
-  public String getString(){
+  public static String getString(Short status){
     switch (status){
       case 1:{
         return "wait store confirm";

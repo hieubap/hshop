@@ -1,24 +1,27 @@
 package com.hshop.dao.model;
 
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformers;
+import org.hibernate.annotations.Where;
+import spring.library.common.dao.model.BaseEntity;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
+@Where(clause = "deleted=0")
 @Table(name = "product")
-public class ProductEntity {
+public class ProductEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -41,17 +44,14 @@ public class ProductEntity {
   private String img;
   private String distributor;
 
-  private LocalDateTime createdDate;
-  private LocalDateTime updatedDate;
+  @Column(name = "store_id")
+  private Long storeId;
 
-  @PrePersist
-  void prePersist() {
-    createdDate = LocalDateTime.now();
-    updatedDate = createdDate;
-  }
+  @OneToOne
+  @JoinColumn(name = "seller_id")
+  private UserEntity seller;
 
-  @PreUpdate
-  void preUpdate() {
-    updatedDate = LocalDateTime.now();
-  }
+  @OneToOne
+  @JoinColumn(name = "store_id",updatable = false,insertable = false)
+  private StoreEntity store;
 }

@@ -1,121 +1,106 @@
 package com.hshop.service;
 
 
+import com.hshop.configuration.userdetail.UserDetailService;
 import com.hshop.dao.model.UserEntity;
 import com.hshop.dao.repository.UserRepository;
-import com.hshop.dto.LoginDTO;
-import com.hshop.dto.ResponseDTO;
 import com.hshop.dto.UserDTO;
-import com.hshop.exception.BaseException;
-import java.util.ArrayList;
-import java.util.List;
+import com.hshop.enums.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import spring.library.common.exception.BaseException;
+import spring.library.common.service.AbstractBaseService;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends
+    AbstractBaseService<UserEntity,UserDTO,UserRepository> implements UserService {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private UserDetailService userDetailService;
+
   @Override
-  public ResponseEntity<?> search(UserDTO userDTO) {
-    List<UserEntity> listEntities = userRepository.search(userDTO);
-    List<UserDTO> listDto = new ArrayList<>();
+  protected UserRepository getRepository() {
+    return userRepository;
+  }
 
-    for (UserEntity entity : listEntities){
-      UserDTO dto = new UserDTO();
-      dto.setId(entity.getId());
-      dto.setName(entity.getName());
-      dto.setPhone(entity.getPhone());
-      dto.setEmail(entity.getEmail());
-      dto.setAddress(entity.getAddress());
+  @Override
+  protected void beforeSave(UserEntity entity, UserDTO dto) {
+    super.beforeSave(entity, dto);
+    if (dto.getUsername() == null || dto.getPassword() == null)
+      throw new BaseException(400,"username and password is null",null);
 
-      listDto.add(dto);
+    if(userRepository.existsByUsername(dto.getUsername())){
+      throw new BaseException(400,"username is exist",null);
     }
-
-    return new ResponseEntity<>(new ResponseDTO<>(listDto), HttpStatus.OK);
-  }
-
-  @Override
-  public ResponseEntity<?> login(LoginDTO loginDTO) throws Exception {
-    if (loginDTO.getUsername() == null && loginDTO.getEmail() == null && loginDTO.getPhone() == null) {
-      throw new BaseException(400,"username or email or phone is null.",loginDTO);
+    if (dto.getRole()!= null && dto.getRole().equals(RoleType.ADMIN)){
+      throw new BaseException(400,"role cant admin",null);
     }
-
-    UserEntity userEntity = userRepository.getUser(loginDTO);
-
-    if (!userEntity.getPassword().equals(loginDTO.getPassword())){
-      throw new BaseException(400,"password is not exactly. check password",null);
-    }
-
-    UserDTO userDTO = new UserDTO();
-    userDTO.setId(userEntity.getId());
-    userDTO.setName(userEntity.getName());
-    userDTO.setPhone(userEntity.getPhone());
-    userDTO.setEmail(userEntity.getEmail());
-    userDTO.setAddress(userEntity.getAddress());
-
-    return new ResponseEntity<>(new ResponseDTO<>(userDTO),HttpStatus.OK);
+    else if (dto.getRole() != null)
+      entity.setRole(dto.getRole());
+    else
+      entity.setRole(RoleType.USER);
   }
 
-  @Override
-  public ResponseEntity<?> register(UserDTO userDTO) {
-
-    UserEntity entity = new UserEntity();
-    entity.setName(userDTO.getName());
-    entity.setPhone(userDTO.getPhone());
-    entity.setAddress(userDTO.getAddress());
-    entity.setEmail(userDTO.getEmail());
-
-    userRepository.save(entity);
-
-    return new ResponseEntity<>(new ResponseDTO<>(entity),HttpStatus.OK);
-  }
-
-  @Override
-  public ResponseEntity<?> detail(String userDTO) {
-
-    return null;
-  }
-
-  @Override
-  public ResponseEntity<?> update(Long id, UserDTO userDTO) throws Exception {
-    if (!userRepository.existsById(id)) {
-      throw new BaseException(400,"id is not exist. check your id",id);
-    }
-
-    UserEntity entity = userRepository.findById(id).get();
-    entity.setName(userDTO.getName());
-    entity.setPhone(userDTO.getPhone());
-    entity.setAddress(userDTO.getAddress());
-    entity.setEmail(userDTO.getEmail());
-    userRepository.save(entity);
-
-    return new ResponseEntity<>(new ResponseDTO<>(entity),HttpStatus.OK);
-  }
-
-  @Override
-  public ResponseEntity<?> delete(Long id) throws Exception {
-    if (!userRepository.existsById(id)) {
-      throw new BaseException(400,"id is not exist. check your id",id);
-    }
-
-    userRepository.deleteById(id);
-    ResponseDTO<?> responseDTO = new ResponseDTO(200,"delete id '" + id +"' successful",null);
-
-    return new ResponseEntity<>(responseDTO,HttpStatus.OK);
-  }
-
-  public static UserDTO convertUserEntityToDTO(UserEntity entity){
-    UserDTO dto = new UserDTO();
-    dto.setId(entity.getId());
-    dto.setName(entity.getName());
-    dto.setPhone(entity.getPhone());
-    dto.setEmail(entity.getEmail());
-    dto.setAddress(entity.getAddress());
-
-    return dto;
-  }
+  //  @Override
+//  public ResponseDTO<?> search(UserDTO userDTO) {
+//    List<UserEntity> listEntities = userRepository.search(userDTO);
+//    List<UserDTO> listDto = new ArrayList<>();
+//
+//    for (UserEntity entity : listEntities){
+//      UserDTO dto = new UserDTO();
+//      dto.setId(entity.getId());
+//      dto.setName(entity.getName());
+//      dto.setPhone(entity.getPhone());
+//      dto.setEmail(entity.getEmail());
+//      dto.setAddress(entity.getAddress());
+//
+//      listDto.add(dto);
+//    }
+//
+//    return new ResponseDTO<>(listDto);
+//  }
+//
+//  @Override
+//  public ResponseDTO<?> detail() throws BaseException {
+//    return new ResponseDTO<>(200,"detail ok",userDetailService.detail());
+//  }
+//
+//  @Override
+//  public ResponseDTO<?> update(Long id, UserDTO userDTO) throws Exception {
+//    if (!userRepository.existsById(id)) {
+//      throw new BaseException(400,"id is not exist. check your id",id);
+//    }
+//
+//    UserEntity entity = userRepository.findById(id).get();
+//    entity.setName(userDTO.getName());
+//    entity.setPhone(userDTO.getPhone());
+//    entity.setAddress(userDTO.getAddress());
+//    entity.setEmail(userDTO.getEmail());
+//    userRepository.save(entity);
+//
+//    return new ResponseDTO<>(entity);
+//  }
+//
+//  @Override
+//  public ResponseDTO<?> delete(Long id) throws Exception {
+//    if (!userRepository.existsById(id)) {
+//      throw new BaseException(400,"id is not exist. check your id",id);
+//    }
+//
+//    userRepository.deleteById(id);
+//    return new ResponseDTO<>(200,"delete ok",null);
+//  }
+//
+//  public static UserDTO convertUserEntityToDTO(UserEntity entity){
+//    UserDTO dto = new UserDTO();
+//    dto.setId(entity.getId());
+//    dto.setName(entity.getName());
+//    dto.setPhone(entity.getPhone());
+//    dto.setEmail(entity.getEmail());
+//    dto.setAddress(entity.getAddress());
+//
+//    return dto;
+//  }
 }

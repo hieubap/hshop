@@ -1,89 +1,56 @@
 package com.hshop.service;
-import java.time.LocalDateTime;
 
 
 import com.hshop.dao.model.ProductEntity;
 import com.hshop.dao.repository.ProductRepository;
 import com.hshop.dto.ProductDTO;
-import com.hshop.dto.ResponseDTO;
-import com.hshop.exception.BaseException;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import spring.library.common.exception.DataException;
+import spring.library.common.service.AbstractBaseService;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl extends AbstractBaseService<ProductEntity,ProductDTO,ProductRepository>
+    implements ProductService {
   @Autowired
-  private ProductRepository foodRepository;
+  private ProductRepository productRepository;
 
   @Override
-  public ResponseEntity<?> search(ProductDTO foodDTO) {
-    List<ProductDTO> listDto = new ArrayList<>();
-    List<ProductEntity> list = foodRepository.search(foodDTO);
-
-    for (ProductEntity entity : list){
-      listDto.add(ConvertService.convertProductEntityToDTO(entity));
-    }
-
-    return new ResponseEntity<>(new ResponseDTO<>(listDto), HttpStatus.OK);
+  protected ProductRepository getRepository() {
+    return productRepository;
   }
 
   @Override
-  public ResponseEntity<?> create(ProductDTO dto) throws BaseException {
+  public Page<ProductDTO> search(ProductDTO foodDTO, Pageable page) {
+    Page<ProductEntity> list = productRepository.search(foodDTO,page);
+    return list.map(this::mapToDTO);
+  }
+
+  @Override
+  protected void beforeSave(ProductEntity entity, ProductDTO dto) {
+    super.beforeSave(entity, dto);
     if (dto.getName() == null || dto.getName().isEmpty()){
-      throw new BaseException(400,"name is null or empty. enter name",null);
+      throw new DataException.NullOrEmpty("name");
     }
     if (dto.getNewPrice() == null || dto.getNewPrice()<0){
-      throw new BaseException(400,
-          "newPrice is null or empty or not exactly. enter newPrice",null);
+      throw new DataException.NullOrEmpty("newPrice");
     }
     if (dto.getNewPrice()>999999999){
-      throw new BaseException(400,
-          "newPrice cant over 999.999.999",null);
+      throw new DataException.NotExistData("newPrice cant over 999.999.999");
     }
     if (dto.getOldPrice() != null && dto.getOldPrice()>999999999){
-      throw new BaseException(400,
-          "oldPrice cant over 999.999.999",null);
+      throw new DataException.NotExistData("oldPrice cant over 999.999.999");
     }
     if (dto.getImg() == null || dto.getImg().isEmpty()){
-      throw new BaseException(400,
-          "img is null or empty or not exactly. enter img",null);
+      throw new DataException.NullOrEmpty("img");
     }
-
-    ProductEntity entity = ConvertService.convertProductDTOToEntity(dto);
-
-    foodRepository.save(entity);
-
-    return new ResponseEntity<>(new ResponseDTO<>(entity),HttpStatus.OK);
   }
 
   @Override
-  public ResponseEntity<?> update(Long id, ProductDTO dto) throws Exception {
-    if (id == null){
-      throw new BaseException(400,"id is null. enter id",dto);
-    }
-    if (!foodRepository.existsById(id)){
-      throw new BaseException(400,"id is not exist. check your id",dto);
-    }
-    ProductEntity entity = ConvertService.convertProductDTOToEntity(dto);
-    entity.setId(id);
-
-    foodRepository.save(entity);
-
-    return new ResponseEntity<>(new ResponseDTO<>(entity),HttpStatus.OK);
-  }
-
-  @Override
-  public ResponseEntity<?> delete(Long id) throws Exception {
-    if (!foodRepository.existsById(id)){
-      throw new BaseException(400,"id is not exist. check your id",id);
-    }
-    foodRepository.deleteById(id);
-    ResponseDTO<?> responseDTO = new ResponseDTO(200,"delete id '" + id +"' successful",null);
-
-    return new ResponseEntity<>(responseDTO,HttpStatus.OK);
+  protected void afterSave(ProductEntity entity, ProductDTO dto) {
+    super.afterSave(entity, dto);
+    dto.setPer(100 - (int) ((double)entity.getNewPrice()*100 / entity.getOldPrice()));
   }
 }

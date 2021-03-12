@@ -8,9 +8,9 @@ import spring.library.common.dto.BaseDTO;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderDTO extends BaseDTO {
-  private Long userId;
-  private Long foodId;
-  private Long storeId;
-  private Long billId;
+public class NotificationDTO extends BaseDTO {
+  private Long id;
+  private String content;
+  private Short isRead;
+  private Long ownerId;
 }
