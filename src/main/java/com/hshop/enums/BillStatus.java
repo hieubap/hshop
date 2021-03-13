@@ -19,16 +19,16 @@ public enum BillStatus {
   public static String getString(Short status){
     switch (status){
       case 1:{
-        return "wait store confirm";
+        return "chờ cửa hàng xác nhận";
       }
       case 2:{
-        return "store confirm";
+        return "cửa hàng đã xác nhận";
       }
       case 3:{
-        return "delivered";
+        return "đã giao hàng";
       }
       case 4:{
-        return "cancel";
+        return "hủy";
       }
     }
     return null;

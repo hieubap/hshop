@@ -19,5 +19,4 @@ public class StoreDTO extends BaseDTO {
   private Time timeEnd;
   private Long ownerId;
   private Object owner;
-
 }

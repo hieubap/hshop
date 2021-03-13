@@ -73,7 +73,7 @@ public class BillServiceImpl
       list.add(bp);
       sum += billProduct.getFood().getNewPrice()*billProduct.getNumber();
     }
-    dto.setStatus(BillStatus.getString(entity.getStatus()));
+    dto.setStatusName(BillStatus.getString(entity.getStatus()));
     dto.setFoods(list);
     dto.setTotal(sum);
   }
@@ -102,7 +102,7 @@ public class BillServiceImpl
       if (!productRepository.existsById(order.getKey())){
         throw new DataException.NullOrEmpty("productId");
       }
-      if (productRepository.findById(order.getKey()).get().getStore().getId()
+      if (!productRepository.findById(order.getKey()).get().getStore().getId()
       .equals(dto.getStoreId())){
         throw new BaseException("id " + order.getKey() + " is not on store "
             + productRepository.findById(order.getKey()).get().getStore().getName());
@@ -175,9 +175,8 @@ public class BillServiceImpl
 
   @Override
   public Page<Map<Long,Long>> chart(LocalDate start, LocalDate end,
-      Pageable pageable) {
-    UserEntity userEntity = userDetailService.getUsernameFromRequest();
-    Page<Map<Long,Long>> data = billRepository.dashboard(start, end,userEntity.getId(),pageable);
+      Long userId, Pageable pageable) {
+    Page<Map<Long,Long>> data = billRepository.dashboard(start, end,userId,pageable);
 
     return data;
   }
@@ -185,5 +184,10 @@ public class BillServiceImpl
   @Override
   public Page<BillDTO> getOrder(Long storeId, Pageable pageable) {
     return billRepository.getOrder(storeId,pageable).map(this::mapToDTO);
+  }
+
+  @Override
+  public Page<BillDTO> getBill(Long storeId, Pageable pageable) {
+    return billRepository.getBill(storeId,pageable).map(this::mapToDTO);
   }
 }

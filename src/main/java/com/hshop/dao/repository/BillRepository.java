@@ -26,7 +26,7 @@ public interface BillRepository extends BaseRepository<BillEntity,BillDTO,Long> 
       + " and (date(created_at) <= :#{#end} or :#{#end} is null) "
       + " and (date(created_at) >= :#{#start} or :#{#start} is null)"
       + " group by year(created_at),month(created_at), day(created_at) ) as tb ",
-      countQuery = "select * from ( select "
+      countQuery = "select count(*) from ( select "
           + "       year(created_at) as year, "
           + "       month(created_at) as month, "
           + "       day(created_at) as day, "
@@ -47,7 +47,7 @@ public interface BillRepository extends BaseRepository<BillEntity,BillDTO,Long> 
       + " and (buyer.id = :#{#dto.buyerId} or :#{#dto.buyerId} is null )"
       + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) "
       + " and (e.storeId = :#{#dto.storeId} or :#{#dto.storeId} is null) "
-      + " and (e.status = :#{#dto.statusValue} or :#{#dto.statusValue} is null)"
+      + " and (e.status = :#{#dto.status} or :#{#dto.status} is null)"
 
       , countQuery = "select count(e) from BillEntity e"
       + " left join e.buyer buyer"
@@ -55,14 +55,20 @@ public interface BillRepository extends BaseRepository<BillEntity,BillDTO,Long> 
       + " and (buyer.id = :#{#dto.buyerId} or :#{#dto.buyerId} is null )"
       + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) "
       + " and (e.storeId = :#{#dto.storeId} or :#{#dto.storeId} is null) "
-      + " and (e.status = :#{#dto.statusValue} or :#{#dto.statusValue} is null)")
+      + " and (e.status = :#{#dto.status} or :#{#dto.status} is null)")
   Page<BillEntity> search(BillDTO dto, Pageable page);
 
   @Query("select e from BillEntity e"
       + " where e.deleted = 0 "
-      + "and (e.storeId = :#{#storeId})"
+      + "and (e.storeId = :#{#storeId} or :#{#storeId} is null )"
       + "and e.status = 1 ")
   Page<BillEntity> getOrder(Long storeId, Pageable pageable);
+
+  @Query("select e from BillEntity e"
+      + " where e.deleted = 0 "
+      + "and (e.storeId = :#{#storeId} or :#{#storeId} is null )"
+      + "and e.status <> 1 ")
+  Page<BillEntity> getBill(Long storeId, Pageable pageable);
 
   @Override
   @Transactional

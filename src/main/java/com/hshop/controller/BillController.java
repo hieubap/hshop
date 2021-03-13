@@ -36,8 +36,9 @@ public class BillController extends BaseController<BillDTO,BillService> {
   public ResponseEntity<?> dashboard(
       @RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate from,
       @RequestParam(value = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate to,
-      @PageableDefault(size = 200, sort = "year", direction = Sort.Direction.DESC) Pageable pageable){
-    return response(billService.chart(from, to,pageable));
+      @PageableDefault(size = 200, sort = "year", direction = Sort.Direction.DESC) Pageable pageable,
+      Long userId){
+    return response(billService.chart(from, to,userId,pageable));
   }
 
   @GetMapping(value = "/get-order")
@@ -45,6 +46,12 @@ public class BillController extends BaseController<BillDTO,BillService> {
       @PageableDefault(size = 200, sort = "id", direction = Direction.DESC) Pageable pageable){
     return response(billService.getOrder(storeId,pageable));
   }
+  @GetMapping(value = "/get-bill")
+  public ResponseEntity<?> getBill(Long storeId,
+      @PageableDefault(size = 200, sort = "id", direction = Direction.DESC) Pageable pageable){
+    return response(billService.getBill(storeId,pageable));
+  }
+
 
   @PutMapping(value = "/confirm/{id}")
   public ResponseEntity<?> storeConfirm(@PathVariable(value = "id") Long id){

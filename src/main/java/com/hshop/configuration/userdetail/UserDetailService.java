@@ -4,7 +4,6 @@ import com.hshop.configuration.dto.RegisterDto;
 import com.hshop.dao.model.UserEntity;
 import com.hshop.dao.repository.UserRepository;
 import com.hshop.dto.ResponseDTO;
-import com.hshop.dto.UserDTO;
 import com.hshop.enums.RoleType;
 import com.hshop.exception.BaseException;
 import io.jsonwebtoken.Jwts;
@@ -19,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import spring.library.common.config.PropertiesConfiguration;
+import spring.library.common.config.security.PropertiesConfiguration;
 import spring.library.common.config.userdetail.UserDetail;
 
 @Service

@@ -36,12 +36,11 @@ public class NotificationServiceImpl extends
     entity.setIsRead((short) 0);
   }
 
-  @Scheduled(cron = "0,30 * * * * *")
+  @Scheduled(cron = "0 0 * * * *")
   public void updateOnDay(){
     NotificationEntity notificationEntity = new NotificationEntity();
     notificationEntity.setOwnerId((long)2);
-    notificationEntity.setCreatedBy((long) 0);
-    notificationEntity.setUpdatedBy((long) 0);
+    notificationEntity.setAuditProperties(null,(long) 0, null, (long) 0);
     StringBuilder str = new StringBuilder();
     str.append("hôm nay có ")
         .append(billRepository.numberBillOnDay(LocalDate.now()))
@@ -49,5 +48,18 @@ public class NotificationServiceImpl extends
     notificationEntity.setContent(str.toString());
     notificationRepository.save(notificationEntity);
 
+  }
+
+  @Override
+  public NotificationDTO read(Long id) {
+    NotificationEntity entity = notificationRepository.findById(id).get();
+    entity.setIsRead((short)2);
+    notificationRepository.save(entity);
+    return mapToDTO(entity);
+  }
+
+  @Override
+  public Integer countRead() {
+    return notificationRepository.countRead();
   }
 }

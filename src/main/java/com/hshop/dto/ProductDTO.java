@@ -21,7 +21,8 @@ public class ProductDTO extends BaseDTO {
   private Long number;
   private Long oldPrice;
   private Long newPrice;
-  private String type;
+  private String typeName;
+  private Short type;
   private String color;
   private String tradeMark;
   private String manufactureCountry;

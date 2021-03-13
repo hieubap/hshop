@@ -32,6 +32,10 @@ public class BillEntity extends BaseEntity {
   private Long id;
 
   private Short status;
+  private String address;
+  private String phone;
+  private String nameBuyer;
+  private String note;
 
   @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
   private List<OrderEntity> listFoods;

@@ -26,10 +26,9 @@ public class BillDTO extends BaseDTO {
 
   private Long total;
 
-  @JsonIgnore
-  private Short statusValue;
+  private Short status;
 
-  private String status;
+  private String statusName;
 
   private LocalDateTime date;
 

@@ -13,10 +13,13 @@
     <link rel="stylesheet" href="font/css/all.css">
 
     <link rel="stylesheet" type="text/css" href="CSS/management.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/manageAdmin.css" />
 
     <script src="Javascript/common/common.js"></script>
     <script src="Javascript/chart/Chart.min.js"></script>
     <script src="./Javascript/management.js"></script>
+    <script src="./Javascript/manageAdmin.js"></script>
+
 
 
 
@@ -24,6 +27,7 @@
 </head>
 
 <body>
+    <div class="loader" id="loader" style="display: none;"></div>
     <!-- Block Element Modifier -->
     <div class="app">
         <header class="header">
@@ -111,30 +115,6 @@
 							<i class="header__search-btn-icon fas fa-search"></i>
 						</button>
                     </div>
-
-                    <!-- Cart layout -->
-                    <div class="header__cart">
-                        <div class="header__cart-wrap">
-                            <i class="header__cart-icon fas fa-shopping-cart"></i>
-                            <span class="header__cart-wrap-notice" id="number_select"></span>
-
-                            <!-- No cart: Header__cart-list--no-cart -->
-                            <div class="header__cart-list">
-                                <img src="Images/sellout.png" class="header__cart-no-card-img"></img>
-                                <span class="header__cart-list-no-card-msg">
-									Chưa có sản phẩm
-								</span>
-
-
-                                <div class="header__cart-heading">Sản phẩm đã thêm</div>
-                                <ul class="header__cart-list-item" id="list_select">
-
-                                </ul>
-
-                                <button class="header__cart-view-cart btn btn--primary" id="xem_gio_hang">Xem giỏ hàng</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -154,33 +134,55 @@
                 </li>
             </ul>
         </header>
-        <div class="menu_select" style="width:12%">
-            <h3 class="w3-bar-item" style="text-align: center;">Menu</h3>
-            <button class="w3-bar-item w3-button" onclick="openScreen('screen1')">Thống kê </button>
-            <button class="w3-bar-item w3-button" onclick="openScreen('screen2')">Sản phẩm</button>
-            <button class="w3-bar-item w3-button" onclick="openScreen('screen3')">Hóa đơn</button>
-            <button class="w3-bar-item w3-button" onclick="openScreen('screen4')">Thông báo</button>
-            <button class="w3-bar-item w3-button" onclick="openScreen('screen5')">Cửa hàng</button>
-            <button class="w3-bar-item w3-button" onclick="openScreen('screen6')">Loại sản phẩm</button>
-            <button class="w3-bar-item w3-button" onclick="openScreen('screen7')">Đánh giá</button>
+        <div class="have-bill" id="notification-new">
+            <i class="ibell fa fa-bell"></i>
+            <p>bạn có đơn</p>
         </div>
-        <div id="screen1" class="container screen">
+
+        <div class="menu">
+            <div class="head-menu">Menu</div>
+            <button id="m1" class="bar" onclick="openScreen('screen1')">Thống kê </button>
+            <button id="m2" class="bar active" onclick="openScreen('screen2')">Sản phẩm</button>
+            <button id="m8" class="bar" onclick="openScreen('screen8')">Đơn mới</button>
+            <button id="m3" class="bar" onclick="openScreen('screen3')">Hóa đơn</button>
+            <button id="m4" class="bar" onclick="openScreen('screen4')">Thông báo</button>
+            <button id="m5" class="bar" onclick="openScreen('screen5')">Cửa hàng</button>
+            <button id="m6" class="bar" onclick="openScreen('screen6')">Loại sản phẩm</button>
+            <button id="m7" class="bar" onclick="openScreen('screen7')">Đánh giá</button>
+            <button id="m9" class="bar" onclick="openScreen('screen9')">Quản lý tài khoản</button>
+            <button id="m10" class="bar" onclick="openScreen('screen10')">Quảng cáo</button>
+            <button id="m11" class="bar" onclick="openScreen('screen11')">Thư viện Ảnh</button>
+            <button id="m11" class="bar" onclick="openScreen('screen11')">Xếp hạng</button>
+
+        </div>
+
+        <div id="screen1" class="container screen" style="display: none;">
             <h2 class=" text-center head_tag" data-wow-duration="1s" data-wow-delay="0.1s">
                 Thống kê
             </h2>
             <div class="content">
-                <canvas id="chart" width="50%"></canvas>
+                <canvas id="chart"></canvas>
             </div>
         </div>
 
-
-        <div id="screen2" class="container screen" style="font-size: 17px;display: none;">
-            <button id="create_btn" class="btn btn-default" style="margin-top:10px">Thêm mới</button>
+        <div id="screen9" class="container screen" style="font-size: 17px;display: none;">
             <h2 class=" text-center head_tag" data-wow-duration="1s" data-wow-delay="0.1s">
-                Menu
+                Quản lý tài khoản
             </h2>
-
-            <div id="list_menu"></div>
+            <div>
+                <button onclick="goMenuR()" class="btn_next">
+      >
+    </button>
+                <label class="btn_next" id="menu_page">1</label>
+                <button onclick="goMenuL()" class="btn_next">
+      <
+    </button>
+            </div>
+        </div>
+        <div id="screen10" class="container screen" style="font-size: 17px;display: none;">
+            <h2 class=" text-center head_tag" data-wow-duration="1s" data-wow-delay="0.1s">
+                Quảng cáo
+            </h2>
             <div>
                 <button onclick="goMenuR()" class="btn_next">
       >
@@ -192,20 +194,65 @@
             </div>
         </div>
 
+        <div id="screen11" class="container screen" style="font-size: 17px;display: none;">
+            <h2 class=" text-center head_tag" data-wow-duration="1s" data-wow-delay="0.1s">
+                Quảng cáo
+            </h2>
+            <div>
+                <button onclick="goMenuR()" class="btn_next">
+      >
+    </button>
+                <label class="btn_next" id="menu_page">1</label>
+                <button onclick="goMenuL()" class="btn_next">
+      <
+    </button>
+            </div>
+        </div>
+
+        <div id="screen2" class="container screen" style="font-size: 17px;">
+            <button class="dropbtn dropup" onclick="changeForms('create-product-form')">Thêm mới</button>
+            <button class="dropbtn dropup" onclick="showAllProduct()">Xem tất cả</button>
+            <div class="dropup">
+                <button class="dropbtn">Sắp xếp</button>
+                <div class="dropup-content">
+                    <a href="#">Giá tăng dần</a>
+                    <a href="#">Giá giảm dần</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Link 3</a>
+                </div>
+            </div>
+            <h2 class=" text-center head_tag" data-wow-duration="1s" data-wow-delay="0.1s">
+                Menu
+            </h2>
+            <div id="list_product"></div>
+            <ul class="pagination" id="pageTag1"></ul>
+        </div>
+
+        <div id="screen8" class="container screen" style="font-size: 17px;display: none;">
+            <h2 class=" text-center head_tag" data-wow-duration="1s" data-wow-delay="0.1s">
+                Đơn mới
+            </h2>
+            <div id="list_order"></div>
+            <ul class="pagination" id="pageTag2"></ul>
+        </div>
+
         <div id="screen3" class="container screen" style="font-size: 17px;display: none;">
             <h2 class=" text-center head_tag" data-wow-duration="1s" data-wow-delay="0.1s">
                 Các đơn trong tháng
             </h2>
             <div id="list_bill"></div>
-            <div>
-                <button onclick="goBillR()" class="btn_next">
-      >
-    </button>
-                <label class="btn_next" id="bill_page">1</label>
-                <button onclick="goBillL()" class="btn_next">
-      <
-    </button>
-            </div>
+            <ul class="pagination" id="pageTag3"></ul>
         </div>
 
         <div id="screen4" class="container screen" style="font-size: 17px;display: none;">
@@ -213,31 +260,16 @@
                 Thông báo
             </h2>
             <div id="list_notification"></div>
-            <div>
-                <button onclick="goNotifiR()" class="btn_next">
-      >
-    </button>
-                <label class="btn_next" id="notifi_page">1</label>
-                <button onclick="goNotifiL()" class="btn_next">
-      <
-    </button>
-            </div>
+            <ul class="pagination" id="pageTag4"></ul>
         </div>
 
         <div id="screen5" class="container screen" style="font-size: 17px;display: none;">
+            <button class="dropbtn dropup" onclick="changeForms('create-store-form')">Thêm mới</button>
             <h2 class=" text-center head_tag" data-wow-duration="1s" data-wow-delay="0.1s">
                 Cửa hàng
             </h2>
             <div id="list_store"></div>
-            <div>
-                <button onclick="goNotifiR()" class="btn_next">
-      >
-    </button>
-                <label class="btn_next" id="notifi_page">1</label>
-                <button onclick="goNotifiL()" class="btn_next">
-      <
-    </button>
-            </div>
+            <ul class="pagination" id="pageTag5"></ul>
         </div>
 
         <div id="screen6" class="container screen" style="font-size: 17px;display: none;">
@@ -245,31 +277,16 @@
                 Loại Sản Phẩm
             </h2>
             <div id="list_typeProduct"></div>
-            <div>
-                <button onclick="goNotifiR()" class="btn_next">
-      >
-    </button>
-                <label class="btn_next" id="notifi_page">1</label>
-                <button onclick="goNotifiL()" class="btn_next">
-      <
-    </button>
-            </div>
+            <ul class="pagination" id="pageTag6"></ul>
         </div>
 
         <div id="screen7" class="container screen" style="font-size: 17px;display: none;">
+            <button class="dropbtn dropup" onclick="changeForms('create-evaluate-form')">Thêm mới</button>
             <h2 class=" text-center head_tag" data-wow-duration="1s" data-wow-delay="0.1s">
                 Đánh giá
             </h2>
             <div id="list_evaluate"></div>
-            <div>
-                <button onclick="goNotifiR()" class="btn_next">
-      >
-    </button>
-                <label class="btn_next" id="notifi_page">1</label>
-                <button onclick="goNotifiL()" class="btn_next">
-      <
-    </button>
-            </div>
+            <ul class="pagination" id="pageTag7"></ul>
         </div>
     </div>
 
@@ -425,7 +442,7 @@
                         <div class="create_groups" style="flex-basis: 50%;">
                             <div class="create_groups">
                                 <label>Loại</label>
-                                <input id="" type="text" class="create_input" placeholder="" />
+                                <select class="create_input select-type-product" name="carlist" form="carform" value="123"></select>
                             </div>
                             <div class="create_groups">
                                 <label>Màu sắc</label>
@@ -456,7 +473,7 @@
 
 
                     <div class="auth-form__controls">
-                        <button id="back_btn" class="btn create_btn_cancel">TRỞ LẠI</button>
+                        <button id="back_btn" class="btn create_btn_cancel back-btn">TRỞ LẠI</button>
                         <button id="cancel_btn" class="btn create_btn_cancel">HỦY</button>
                         <button id="create_btn2" class="btn create_btn_cancel">THÊM MỚI</button>
                     </div>
@@ -502,7 +519,7 @@
                         <div class="create_groups" style="flex-basis: 50%;">
                             <div class="create_groups">
                                 <label>Loại</label>
-                                <input id="" type="text" class="update_input" placeholder="" />
+                                <select class="update_input select-type-product" name="carlist" form="carform" value="123"></select>
                             </div>
                             <div class="create_groups">
                                 <label>Màu sắc</label>
@@ -533,9 +550,147 @@
 
 
                     <div class="auth-form__controls">
-                        <button id="update-back_btn" class="btn create_btn_cancel">TRỞ LẠI</button>
+                        <button id="update-back_btn" class="btn create_btn_cancel back-btn">TRỞ LẠI</button>
                         <button id="update-cancel_btn" class="btn create_btn_cancel">HỦY</button>
                         <button id="update-btn" class="btn create_btn_cancel">CẬP NHẬT</button>
+                    </div>
+                </div>
+            </form>
+            <form id="ud-store-form" class="create-form fm">
+                <div class="auth-form__container">
+                    <div class="auth-form__header">
+                        <div class="auth-form__heading">Cập nhật</div>
+                    </div>
+
+                    <div style="display:flex;flex-direction: row;">
+                        <div class="" style="flex-basis: 50%;">
+                            <div class="create_groups">
+                                <label>Tên</label>
+                                <input id="update_title" type="text" class="ud-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>Địa chỉ</label>
+                                <input id="" type="text" class="ud-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>Email</label>
+                                <input id="" type="text" class="ud-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>Số điện thoại</label>
+                                <input id="" type="text" class="ud-store-input" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="create_groups" style="flex-basis: 50%;">
+                            <div class="create_groups">
+                                <label>Mở cửa</label>
+                                <input id="" type="text" class="ud-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>đóng cửa</label>
+                                <input id="" type="text" class="ud-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>chủ cửa hàng</label>
+                                <input id="" type="text" class="ud-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>ngày tạo</label>
+                                <input id="" type="text" class="ud-store-input" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="auth-form__controls">
+                        <button id="ud-store-back-btn" class="btn create_btn_cancel back-btn">TRỞ LẠI</button>
+                        <button id="ud-store-cancel-btn" class="btn create_btn_cancel">HỦY</button>
+                        <button id="ud-store-btn" class="btn create_btn_cancel">CẬP NHẬT</button>
+                    </div>
+                </div>
+            </form>
+            <form id="create-store-form" class="create-form fm">
+                <div class="auth-form__container">
+                    <div class="auth-form__header">
+                        <div class="auth-form__heading">Cập nhật</div>
+                    </div>
+
+                    <div style="display:flex;flex-direction: row;">
+                        <div class="" style="flex-basis: 50%;">
+                            <div class="create_groups">
+                                <label>Tên</label>
+                                <input id="update_title" type="text" class="create-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>Địa chỉ</label>
+                                <input id="" type="text" class="create-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>Email</label>
+                                <input id="" type="text" class="create-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>Số điện thoại</label>
+                                <input id="" type="text" class="create-store-input" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="create_groups" style="flex-basis: 50%;">
+                            <div class="create_groups">
+                                <label>Mở cửa</label>
+                                <input id="" type="text" class="create-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>đóng cửa</label>
+                                <input id="" type="text" class="create-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>chủ cửa hàng</label>
+                                <input id="" type="text" class="create-store-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>ngày tạo</label>
+                                <input id="" type="text" class="create-store-input" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="auth-form__controls">
+                        <button id="ud-store-back-btn" class="btn create_btn_cancel back-btn">TRỞ LẠI</button>
+                        <button id="ud-store-cancel-btn" class="btn create_btn_cancel">HỦY</button>
+                        <button id="ud-store-btn" class="btn create_btn_cancel">CẬP NHẬT</button>
+                    </div>
+                </div>
+            </form>
+            <form id="create-evaluate-form" class="create-form fm">
+                <div class="auth-form__container">
+                    <div class="auth-form__header">
+                        <div class="auth-form__heading">Cập nhật</div>
+                    </div>
+
+                    <div style="display:flex;flex-direction: row;">
+                        <div class="" style="flex-basis: 100%;">
+                            <div class="create_groups">
+                                <label>Tên sản phẩm</label>
+                                <select class="select-product scrollable-menu ">
+                                </select>
+                            </div>
+                            <div class="create_groups">
+                                <label>số sao</label>
+                                <input id="" type="text" class="create-evaluate-input" placeholder="" />
+                            </div>
+                            <div class="create_groups">
+                                <label>nội dung đánh giá</label>
+                                <input id="" type="text" class="create-evaluate-input" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="auth-form__controls">
+                        <button id="ud-store-back-btn" class="btn create_btn_cancel back-btn">TRỞ LẠI</button>
+                        <button id="ud-store-cancel-btn" class="btn create_btn_cancel">HỦY</button>
+                        <button id="ud-store-btn" class="btn create_btn_cancel">CẬP NHẬT</button>
                     </div>
                 </div>
             </form>

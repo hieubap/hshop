@@ -34,7 +34,7 @@ public class ProductEntity extends BaseEntity {
   private Long number;
   private Long oldPrice;
   private Long newPrice;
-  private String type;
+  private Short type;
   private String color;
   private String tradeMark;
   private String manufactureCountry;

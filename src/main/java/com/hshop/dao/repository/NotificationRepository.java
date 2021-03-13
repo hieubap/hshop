@@ -33,4 +33,8 @@ public interface NotificationRepository extends BaseRepository<NotificationEntit
   @Query(value = "update NotificationEntity e set e.deleted = 1 "
       + " where e.id = ?#{#id} ")
   void deleteById(Long id);
+
+  @Query("select count(e) from NotificationEntity e"
+      + " where e.deleted = 0 and e.isRead = 1")
+  Integer countRead();
 }
