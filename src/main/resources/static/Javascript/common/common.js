@@ -1,5 +1,5 @@
-const domainApi = 'http://localhost:8081';
-const domain = 'http://127.0.0.1:5500/'
+const domainApi = 'http://93.188.162.82:8088';
+const domain = 'http://93.188.162.82:8088/'
 const url_giohang = domain + '/giohang.html';
 const url_management = domain + '/management.html';
 const url_home = domain + '/index.html';
