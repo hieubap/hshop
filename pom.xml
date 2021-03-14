@@ -26,8 +26,8 @@
   <dependencies>
 
     <dependency>
-      <groupId>spring.common.library</groupId>
-      <artifactId>common</artifactId>
+      <groupId>spring.backend</groupId>
+      <artifactId>library</artifactId>
       <version>Library</version>
     </dependency>
   </dependencies>
@@ -38,12 +38,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <excludes>
-            <exclude>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-            </exclude>
-          </excludes>
+          <executable>true</executable>
         </configuration>
       </plugin>
     </plugins>
