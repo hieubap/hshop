@@ -36,7 +36,7 @@ public class NotificationServiceImpl extends
     entity.setIsRead((short) 0);
   }
 
-  @Scheduled(cron = "0 0 0 * * *")
+  @Scheduled(cron = "0 0 0,6,12,18 * * *")
   public void updateOnDay(){
     NotificationEntity notificationEntity = new NotificationEntity();
     notificationEntity.setOwnerId((long)2);

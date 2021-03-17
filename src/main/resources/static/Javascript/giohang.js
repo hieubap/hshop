@@ -118,7 +118,7 @@ function book(){
   
     fetch(url_order,{
       method: 'post',
-      headers: { 'content-type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwiaWF0IjoxNjE0ODU2ODgxLCJleHAiOjE2MTYwMDA0MDB9.wVq1WwAO7v9NAxfylit_pGv69Jz_zqXNJTAgbfUFqo-aLAKVzOfJbro3PX8jXpxW' },
+      headers: { 'content-type': 'application/json', 'Authorization': token },
       body: JSON.parse(JSON.stringify(body))
     }).then(function (response) {
       if (response.status === 200) {

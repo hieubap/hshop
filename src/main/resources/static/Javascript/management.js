@@ -106,7 +106,7 @@ function chart() {
 function confirm(id) {
     loadRender(true);
     fetch(url_confirm + id, {
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwiaWF0IjoxNjE0ODU2ODgxLCJleHAiOjE2MTYwMDA0MDB9.wVq1WwAO7v9NAxfylit_pGv69Jz_zqXNJTAgbfUFqo-aLAKVzOfJbro3PX8jXpxW' },
+        headers: { 'content-type': 'application/json', 'Authorization': token },
         method: 'put',
     }).then(function(response) {
         if (response.status === 200) {
@@ -752,7 +752,7 @@ function callApiEvaluate(page, size) {
 function cancelBill(id) {
     loadRender(true);
     fetch(url_cancel + id, {
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwiaWF0IjoxNjE0ODU2ODgxLCJleHAiOjE2MTYwMDA0MDB9.wVq1WwAO7v9NAxfylit_pGv69Jz_zqXNJTAgbfUFqo-aLAKVzOfJbro3PX8jXpxW' },
+        headers: { 'content-type': 'application/json', 'Authorization': token },
         method: 'put',
     }).then(function(response) {
         if (response.status === 200) {
@@ -821,7 +821,7 @@ function put(id, type) {
 
     console.log(fetApi + id);
     fetch(fetApi + id, {
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwiaWF0IjoxNjE0ODU2ODgxLCJleHAiOjE2MTYwMDA0MDB9.wVq1WwAO7v9NAxfylit_pGv69Jz_zqXNJTAgbfUFqo-aLAKVzOfJbro3PX8jXpxW' },
+        headers: { 'content-type': 'application/json', 'Authorization': token },
         method: 'PUT'
     }).then(function(response) {
         console.log(response.text);
@@ -879,7 +879,7 @@ function deleteApi(id, type) {
 
     console.log(fetApi + id);
     fetch(fetApi + id, {
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwiaWF0IjoxNjE0ODU2ODgxLCJleHAiOjE2MTYwMDA0MDB9.wVq1WwAO7v9NAxfylit_pGv69Jz_zqXNJTAgbfUFqo-aLAKVzOfJbro3PX8jXpxW' },
+        headers: { 'content-type': 'application/json', 'Authorization': token },
         method: 'delete'
     }).then(function(response) {
         console.log(response.text);
@@ -1114,7 +1114,7 @@ function callApiUpdate() {
 }`;
     fetch(url_product_update + idProductU, {
         method: 'put',
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwiaWF0IjoxNjE0ODU2ODgxLCJleHAiOjE2MTYwMDA0MDB9.wVq1WwAO7v9NAxfylit_pGv69Jz_zqXNJTAgbfUFqo-aLAKVzOfJbro3PX8jXpxW' },
+        headers: { 'content-type': 'application/json', 'Authorization': token },
         body: updateP
     }).then(function(response) {
         if (response.status === 200) {
@@ -1142,7 +1142,7 @@ function callAPIUpdateStore() {
             "ownerId": ${oldP.ownerId}}`;
     fetch(url_store_update + idProductU, {
         method: 'put',
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwiaWF0IjoxNjE0ODU2ODgxLCJleHAiOjE2MTYwMDA0MDB9.wVq1WwAO7v9NAxfylit_pGv69Jz_zqXNJTAgbfUFqo-aLAKVzOfJbro3PX8jXpxW' },
+        headers: { 'content-type': 'application/json', 'Authorization': token },
         body: updateP
     }).then(function(response) {
         if (response.status === 200) {
@@ -1180,7 +1180,7 @@ function callApiCreate() {
 }`;
     fetch(url_product_create, {
         method: 'post',
-        headers: { 'content-type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwiaWF0IjoxNjE0ODU2ODgxLCJleHAiOjE2MTYwMDA0MDB9.wVq1WwAO7v9NAxfylit_pGv69Jz_zqXNJTAgbfUFqo-aLAKVzOfJbro3PX8jXpxW' },
+        headers: { 'content-type': 'application/json', 'Authorization': token },
         body: createP
     }).then(function(response) {
         if (response.status === 200) {
