@@ -111,8 +111,8 @@ function confirm(id) {
     }).then(function(response) {
         if (response.status === 200) {
             console.log('successful');
-            showOrder();
-            showBills();
+            callApiOrder();
+            callApiBill();
             loadRender(false);
         }
     });
@@ -757,8 +757,8 @@ function cancelBill(id) {
         method: 'put',
     }).then(function(response) {
         if (response.status === 200) {
-            showBills();
-            showOrders();
+            callApiBill();
+            callApiOrder();
             loadRender(false);
             console.log('cancel ok');
         }
