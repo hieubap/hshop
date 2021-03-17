@@ -911,6 +911,8 @@ function deleteProduct(id) {
 }
 
 function deleteBill(id) {
+    loadRender(true);
+    
     fetch(url_bill_delete + id, {
         method: 'delete',
     }).then(function(response) {
@@ -918,7 +920,6 @@ function deleteBill(id) {
             callApiBill();
         }
     });
-    showBills();
 }
 
 function addHandleForm() {}
