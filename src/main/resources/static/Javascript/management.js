@@ -1092,7 +1092,7 @@ function update(id, type) {
 function callApiUpdate() {
     loadRender(true);
     let inpEls = document.getElementsByClassName('update_input');
-    let oldP = getProductById(idProductU, 1);
+    let oldP = getById(idProductU, 1);
     var updateP = `{
     "id": ${idProductU},
     "title": "${inpEls[0].value}",
@@ -1122,7 +1122,7 @@ function callApiUpdate() {
         if (response.status === 200) {
             response.json().then(function(text) {
                 var data = JSON.parse(JSON.stringify(text)).data;
-                showProducts(page_product, number_menu);
+                callApiProduct();
                 let modalLayer = document.querySelector('.modal');
                 modalLayer.style.display = 'none';
             })
@@ -1150,7 +1150,7 @@ function callAPIUpdateStore() {
         if (response.status === 200) {
             response.json().then(function(text) {
                 setById(idProductU, 4, JSON.parse(JSON.stringify(text)).data);
-                showStores();
+                callApiStore();
                 let modalLayer = document.querySelector('.modal');
                 modalLayer.style.display = 'none';
             })
@@ -1189,7 +1189,7 @@ function callApiCreate() {
             response.json().then(function(text) {
                 var data = JSON.parse(JSON.stringify(text)).data;
                 console.log(data);
-                showProducts();
+                callApiProduct();
                 let modalLayer = document.querySelector('.modal');
                 modalLayer.style.display = 'none';
             })
