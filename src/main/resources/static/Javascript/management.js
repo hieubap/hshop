@@ -112,7 +112,8 @@ function confirm(id) {
         if (response.status === 200) {
             console.log('successful');
             showOrder();
-            showBill();
+            showBills();
+            loadRender(false);
         }
     });
 }
@@ -756,8 +757,9 @@ function cancelBill(id) {
         method: 'put',
     }).then(function(response) {
         if (response.status === 200) {
-            showBill();
-            showOrder();
+            showBills();
+            showOrders();
+            loadRender(false);
             console.log('cancel ok');
         }
     });
@@ -923,10 +925,10 @@ function deleteBill(id) {
         method: 'delete',
     }).then(function(response) {
         if (response.status === 200) {
-            showBill();
+            showBills();
         }
     });
-    showBill();
+    showBills();
 }
 
 function addHandleForm() {}
@@ -1120,7 +1122,7 @@ function callApiUpdate() {
         if (response.status === 200) {
             response.json().then(function(text) {
                 var data = JSON.parse(JSON.stringify(text)).data;
-                showListMenu(page_product, number_menu);
+                showProducts(page_product, number_menu);
                 let modalLayer = document.querySelector('.modal');
                 modalLayer.style.display = 'none';
             })
@@ -1187,7 +1189,7 @@ function callApiCreate() {
             response.json().then(function(text) {
                 var data = JSON.parse(JSON.stringify(text)).data;
                 console.log(data);
-                showListMenu();
+                showProducts();
                 let modalLayer = document.querySelector('.modal');
                 modalLayer.style.display = 'none';
             })
