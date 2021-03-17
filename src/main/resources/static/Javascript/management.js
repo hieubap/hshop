@@ -193,7 +193,7 @@ function showProducts() {
     for (i = page_product * number_menu; i < (page_product + 1) * number_menu && i < products.length; i++) {
         var product = products[i];
         list += `<div class="list_product_order">
-    <img src="images/food${(i+1)%19+1}.jpg" class="image">
+    <img src="${domainApi}/Images/food${(i+1)%19+1}.jpg" class="image">
     <div style="width:25%;float: left;margin-left: 20px"><div style="float: top;font-size: 17px"><b>id</b>: ${product.id} </div>
     </div>
     <div style="float: left;margin-left: 20px"><div style="float: top;font-size: 17px"><b>tên</b>: ${product.name} </div>
