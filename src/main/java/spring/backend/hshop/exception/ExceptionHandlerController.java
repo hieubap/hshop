@@ -1,18 +1,17 @@
 package spring.backend.hshop.exception;
 
 
-import spring.backend.hshop.dto.ResponseDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import spring.backend.hshop.dto.ResponseDTO;
 
-@ControllerAdvice
-public class ExceptionHandlerController {
+@RestControllerAdvice
+public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(BaseException.class)
-  public ResponseEntity<?> handleException(BaseException ex) {
+  public ResponseDTO<?> handleException(BaseException ex) {
     ResponseDTO<?> responseDTO = ex.getResponseDTO();
-    return new ResponseEntity<>(responseDTO, HttpStatus.valueOf(ex.getResponseDTO().getCode()));
+    return responseDTO;
   }
 }

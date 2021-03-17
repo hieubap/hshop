@@ -69,8 +69,7 @@ public class UserDetailService implements UserDetailsService {
 //    return new ResponseEntity<>(HttpStatus.OK.value(),"login successful",new ResponseDTO<>(dto));
 //  }
 
-  public ResponseDTO<?> register(RegisterDto dto)
-      throws BaseException {
+  public ResponseDTO<?> register(RegisterDto dto){
     UserEntity entity = new UserEntity();
 
     if (dto.getUsername() == null || dto.getPassword() == null)

@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BaseException extends Exception {
+public class BaseException extends RuntimeException {
   private ResponseDTO<?> responseDTO;
 
   public BaseException(int code, String message, Object data) {
