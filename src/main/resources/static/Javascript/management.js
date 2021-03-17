@@ -915,7 +915,7 @@ function deleteBill(id) {
         method: 'delete',
     }).then(function(response) {
         if (response.status === 200) {
-            showBills();
+            callApiBill();
         }
     });
     showBills();
