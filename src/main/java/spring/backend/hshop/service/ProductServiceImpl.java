@@ -29,6 +29,12 @@ public class ProductServiceImpl extends AbstractBaseService<ProductEntity,Produc
   }
 
   @Override
+  protected void specificMapToDTO(ProductEntity entity, ProductDTO dto) {
+    super.specificMapToDTO(entity, dto);
+    dto.setPer((int)((double)entity.getNewPrice()*100/entity.getOldPrice()));
+  }
+
+  @Override
   protected void beforeSave(ProductEntity entity, ProductDTO dto) {
     super.beforeSave(entity, dto);
     if (dto.getName() == null || dto.getName().isEmpty()){

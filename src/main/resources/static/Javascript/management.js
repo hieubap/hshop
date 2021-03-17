@@ -903,19 +903,9 @@ function deleteProduct(id) {
         if (response.status === 200) {
             addHandleForm();
             response.json().then(function(text) {
-                showProducts();
+                callApiProduct();
                 console.log(products);
             })
-        }
-    });
-}
-
-function deleteProduct(id) {
-    fetch(url_menu_delete + id, {
-        method: 'delete',
-    }).then(function(response) {
-        if (response.status === 200) {
-            showListMenu();
         }
     });
 }
